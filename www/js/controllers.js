@@ -1,9 +1,7 @@
 /* global angular, document, window */
 'use strict';
 
-angular.module('starter.controllers', [])
-
-.controller('AppCtrl', function($scope, $ionicModal, $ionicPopover, $timeout) {
+angular.module('dashboard').controller('AppCtrl', function($scope, $state, $ionicModal, $ionicPopover, $timeout) {
     // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
@@ -81,14 +79,48 @@ angular.module('starter.controllers', [])
             fabs[0].remove();
         }
     };
+    
+    $scope.logout = function() {
+    	$state.go('app.login');
+    };
+    
 })
 
-.controller('LoginCtrl', function($scope, $timeout, $stateParams, ionicMaterialInk) {
+.controller('LoginCtrl', function($scope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
     $scope.$parent.clearFabs();
     $timeout(function() {
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
+    $scope.login = function(data){
+    	$scope.authTokenForLogin= btoa(data.username+":"+data.password);
+    	loginService.login($scope.authTokenForLogin).then(function(loginResp) {
+    		$state.go('app.profile');
+    		$scope.$parent.showHeader();
+		    $scope.$parent.clearFabs();
+		    $scope.isExpanded = false;
+		    $scope.$parent.setExpanded(false);
+		    $scope.$parent.setHeaderFab(false);
+
+		    // Set Motion
+		    $timeout(function() {
+		        ionicMaterialMotion.slideUp({
+		            selector: '.slide-up'
+		        });
+		    }, 300);
+
+		    $timeout(function() {
+		        ionicMaterialMotion.fadeSlideInRight({
+		            startVelocity: 3000
+		        });
+		    }, 700);
+
+		    // Set Ink
+		    ionicMaterialInk.displayEffect();
+        }, function(err) {
+        	console.log("Failed!, something went wrong.");
+        });
+    }
 })
 
 .controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {

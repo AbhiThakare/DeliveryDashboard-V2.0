@@ -1,4 +1,4 @@
-angular.module('starter').config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
+angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.views.maxCache(0);
 
     /*
