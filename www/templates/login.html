@@ -1,13 +1,17 @@
 <ion-view title="Login" hide-nav-bar="true" id="page16" style="background-color:#;" class=" ">
-   <ion-content class="has-header" scroll="true" padding="true" style="background: url(img/login.jpg) center; background-size: cover;">
+   <ion-content class="has-header" scroll="true" padding="true" style="background: url(img/login-background.jpg) center; background-size: cover;">
       <h2 id="signup-heading2" style="color:#000000;font-weight:400;text-align:center;" class=" ">
-      	<img style="text-align:center;" src ='img/icon.png' alt="Login" />
+      	<img style="text-align:center;" src ='img/icon.png' width="200" height="200" alt="Login" />
       </h2>
       <form class="list animated bounceIn " name="loginform" class="css-form" novalidate id="login-form7" ng-submit="loginform.$valid && login(data)">
+      	<div ng-show="errorObj">
+        	<div style="color:red;margin:5px;padding:5px;">Error - {{errorObj}}</div>
+         </div>
          <ion-list class=" " id="login-list5">
-            <ion-md-input placeholder="Username" required="true" highlight-color="balanced" type="text" ng-model="data.username" name="username"></ion-md-input>
+            <ion-md-input placeholder="Username" required="true" highlight-color="balanced" type="email" ng-model="data.username" name="username"></ion-md-input>
             <div ng-show="loginform.$submitted || loginform.username.$touched">
                <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.username.$error.required">Please enter User name.</div>
+               <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.username.$error.email">Please enter valid email.</div>
             </div>
             <ion-md-input placeholder="Password" required="true" highlight-color="energized" type="password" ng-model="data.password" name="password"></ion-md-input>
             <div ng-show="loginform.$submitted || loginform.password.$touched">

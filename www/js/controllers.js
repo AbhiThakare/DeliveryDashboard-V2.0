@@ -95,6 +95,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $state, $ioni
     $scope.login = function(data){
     	$scope.authTokenForLogin= btoa(data.username+":"+data.password);
     	loginService.login($scope.authTokenForLogin).then(function(loginResp) {
+    		$scope.errorObj = false;
     		$state.go('app.profile');
     		$scope.$parent.showHeader();
 		    $scope.$parent.clearFabs();
@@ -118,7 +119,8 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $state, $ioni
 		    // Set Ink
 		    ionicMaterialInk.displayEffect();
         }, function(err) {
-        	console.log("Failed!, something went wrong.");
+        	$scope.errorObj = err.data.message;
+        	console.log("Failed!, something went wrong. " +err.data.message);
         });
     }
 })
