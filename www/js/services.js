@@ -1,8 +1,8 @@
-angular.module('dashboard').service('loginService', function($q, $http) {
+angular.module('dashboard').service('loginService', function($q, $http, URL) {
     var login = function(authTokenForLogin) {
         return $q(function(resolve, reject) {
             var req = {
-	    		url: 'http://inmbz2239.in.dst.ibm.com:11090/deliverydashboard/user?id=02689A',
+	    		url: URL.url+'user?id=02689A',
 	            method:'GET',
 	            headers : {
 	              'Authorization' : 'Basic '+authTokenForLogin

@@ -1,4 +1,4 @@
-angular.module('dashboard', ['ionic','ionic-material', 'ionMdInput'])
+angular.module('dashboard', ['ionic','ionic-material', 'ionMdInput','chart.js'])
 
 .run(function($ionicPlatform) {
     $ionicPlatform.ready(function() {

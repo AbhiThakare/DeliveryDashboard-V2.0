@@ -6,6 +6,13 @@ h1 {
     font-size: 42px;
 }
 
+@media (min-width:1025px) { 
+	.scroll{
+		padding-left: 10%;
+		padding-right: 10%;
+	}
+}
+
 
 /* Utilities
 ==================================*/

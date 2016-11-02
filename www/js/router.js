@@ -82,17 +82,18 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
 
     .state('app.profile', {
         url: '/profile',
+        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/profile.html',
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right button-energized-900"><i class="icon ion-plus"></i></button>',
+                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right expanded button-energized-900 drop"><i class="icon ion-plus"></i></button>',
                 controller: function ($timeout) {
-                    /*$timeout(function () {
+                    $timeout(function () {
                         document.getElementById('fab-profile').classList.toggle('on');
-                    }, 800);*/
+                    }, 800);
                 }
             }
         }
