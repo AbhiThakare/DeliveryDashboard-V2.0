@@ -2,11 +2,11 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
     var login = function(authTokenForLogin) {
         return $q(function(resolve, reject) {
             var req = {
-	    		url: URL.url+'user?id=02689A',
-	            method:'GET',
-	            headers : {
-	              'Authorization' : 'Basic '+authTokenForLogin
-	            }
+                url: URL.url + 'user?id=02689A',
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Basic ' + authTokenForLogin
+                }
             }
             $http(req).then(function(data) {
                 if (data.status === 200) {
@@ -20,6 +20,6 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
         });
     };
     return {
-    	login: login,
+        login: login,
     };
 });
