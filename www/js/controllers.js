@@ -75,36 +75,36 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $state, $ioni
     }, 0);
     ionicMaterialInk.displayEffect();
     $scope.login = function(data) {
-        $state.go('app.profile');
-        //    	$scope.authTokenForLogin= btoa(data.username+":"+data.password);
-        //    	loginService.login($scope.authTokenForLogin).then(function(loginResp) {
-        //    		$scope.errorObj = false;
-        //    		$state.go('app.profile');
-        //    		$scope.$parent.showHeader();
-        //		    $scope.$parent.clearFabs();
-        //		    $scope.isExpanded = false;
-        //		    $scope.$parent.setExpanded(false);
-        //		    $scope.$parent.setHeaderFab(false);
-        //
-        //		    // Set Motion
-        //		    $timeout(function() {
-        //		        ionicMaterialMotion.slideUp({
-        //		            selector: '.slide-up'
-        //		        });
-        //		    }, 300);
-        //
-        //		    $timeout(function() {
-        //		        ionicMaterialMotion.fadeSlideInRight({
-        //		            startVelocity: 3000
-        //		        });
-        //		    }, 700);
-        //
-        //		    // Set Ink
-        //		    ionicMaterialInk.displayEffect();
-        //        }, function(err) {
-        //        	$scope.errorObj = err.data.message;
-        //        	console.log("Failed!, something went wrong. " +err.data.message);
-        //        });
+        //$state.go('app.profile');
+    	$scope.authTokenForLogin= btoa(data.username+":"+data.password);
+    	loginService.login($scope.authTokenForLogin).then(function(loginResp) {
+    		$scope.errorObj = false;
+    		$state.go('app.profile');
+    		$scope.$parent.showHeader();
+		    $scope.$parent.clearFabs();
+		    $scope.isExpanded = false;
+		    $scope.$parent.setExpanded(false);
+		    $scope.$parent.setHeaderFab(false);
+
+		    // Set Motion
+		    $timeout(function() {
+		        ionicMaterialMotion.slideUp({
+		            selector: '.slide-up'
+		        });
+		    }, 300);
+
+		    $timeout(function() {
+		        ionicMaterialMotion.fadeSlideInRight({
+		            startVelocity: 3000
+		        });
+		    }, 700);
+
+		    // Set Ink
+		    ionicMaterialInk.displayEffect();
+        }, function(err) {
+        	$scope.errorObj = err.data.message;
+        	console.log("Failed!, something went wrong. " +err.data.message);
+        });
     }
 }).controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     // Set Header
