@@ -1,9 +1,9 @@
 angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.views.maxCache(0);
-    /*
+    
     // Turn off back button text
-    $ionicConfigProvider.backButton.previousTitleText(false);
-    */
+    $ionicConfigProvider.backButton.previousTitleText(true);
+    
     $stateProvider.state('app', {
         url: '/app',
         abstract: true,
@@ -17,12 +17,7 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
                 controller: 'ActivityCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-activity" class="button button-fab button-fab-top-right expanded button-energized-900 flap"><i class="icon ion-paper-airplane"></i></button>',
-                controller: function($timeout) {
-                    $timeout(function() {
-                        document.getElementById('fab-activity').classList.toggle('on');
-                    }, 200);
-                }
+                template: ''
             }
         }
     }).state('app.friends', {
