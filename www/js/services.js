@@ -46,6 +46,6 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
         });
     };
     return {
-    	getAllProgram: getAllProgram,
+        getAllProgram: getAllProgram,
     };
 });

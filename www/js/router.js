@@ -1,9 +1,7 @@
 angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     $ionicConfigProvider.views.maxCache(0);
-    
     // Turn off back button text
     $ionicConfigProvider.backButton.previousTitleText(true);
-    
     $stateProvider.state('app', {
         url: '/app',
         abstract: true,

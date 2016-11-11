@@ -1,377 +1,270 @@
 <ion-view view-title="Add Sprint Data" hide-back-button="true" hide-nav-bar="true">
-	<ion-content ng-class="{expanded:$scope.isExpanded}" class="animate-fade-slide-in">
-		<button ng-click="previousSlide(data)" id="fab-profile2" type="submit" class="button button-fab button-fab-top-left button-energized-900" nav-view="active">
+    <ion-content ng-class="{expanded:$scope.isExpanded}" class="animate-fade-slide-in"> <button ng-click="previousSlide(data)" id="fab-profile2" type="submit" class="button button-fab button-fab-top-left button-energized-900" nav-view="active">
 			<i class="icon ion-chevron-left"></i>
-		</button>
-		<button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
+		</button> <button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
 			<i ng-show="currentSlide <= 6" class="icon ion-chevron-right"></i><span  ng-show="currentSlide >= 7"> Done  </span>
 		</button>
-		<ion-slide-box  ng-init="disableSwipe()">
-		<!-- 1 -->
-		<ion-slide>
-			<fieldset>
-				<legend> Select Program / Project </legend>
-					<div class= "row responsive-sm" ng-show="slideError1">
-						<div class="col" style="color:red;padding:5px;">{{slideError1Message}} </div>
-					</div>
-					<div class="row responsive-sm">
-						<div class="col col-30">
-							<span class="input-label">Program<span class="assertive">*</span></span>
-						</div>
-						<div class="col col-60">
-							<select name="selectCategory" required="" ng-model="data.selectProgram" ng-change="clearData()" class="item">
+        <ion-slide-box ng-init="disableSwipe()">
+            <!-- 1 -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Select Program / Project </legend>
+                    <div class="row responsive-sm" ng-show="slideError1">
+                        <div class="col" style="color:red;padding:5px;">{{slideError1Message}} </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Program<span class="assertive">*</span></span>
+                        </div>
+                        <div class="col col-60"> <select name="selectCategory" required="" ng-model="data.selectProgram" ng-change="clearData()" class="item">
 								<!-- <option ng-repeat="option in programOption"  ng-value="option.id">{{option.name}}</option> -->
 								<option value="123">123</option>
 								<option value="456">456</option>
-							</select>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-						<div class="col col-30">
-							<span class="input-label">Project <span class="assertive">*</span></span>
-						</div>
-						<div class="col col-60">
-							<select  name="selectCategory" required="" ng-model="data.selectProject" ng-change="clearData()" class="item" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
+							</select> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Project <span class="assertive">*</span></span>
+                        </div>
+                        <div class="col col-60"> <select name="selectCategory" required="" ng-model="data.selectProject" ng-change="clearData()" class="item" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 								<option ng-repeat="option in categoryOptions"  ng-value="option.categoryId">{{option.name}}</option>
 								<option value="123">123</option>
 								<option value="456">456</option>
-							</select>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!-- 2 -->
-			<ion-slide>
-				<fieldset>
-					<legend> Sprint Data </legend>
-					<div class= "row responsive-sm" ng-show="slideError2">
-						<div class="col" style="color:red;padding:5px;">{{slideError2Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-						<div class="col col-30">
-		    				<ion-toggle ng-model="data.isSprintActive" name="isSprintActive" class="item">Is Sprint Active?</ion-toggle>
-		    			</div>
-		    		</div>
-		    		<div class="row responsive-sm">
-			    		<div class="col col-30">
-							<span class="input-label">Sprint No <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</select> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!-- 2 -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Sprint Data </legend>
+                    <div class="row responsive-sm" ng-show="slideError2">
+                        <div class="col" style="color:red;padding:5px;">{{slideError2Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30">
+                            <ion-toggle ng-model="data.isSprintActive" name="isSprintActive" class="item">Is Sprint Active?</ion-toggle>
+                        </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Sprint No <span class="assertive">*</span></span> <label class="item item-input">
 							  <input type="number"  ng-model="data.sprint" required name="sprint">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-30">
-							<span class="input-label">Sprint Start Date</span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Sprint Start Date</span> <label class="item item-input">
 								<input type="date" placeholder="mm/dd/yyyy" ng-model="data.startDate" name="startDate">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-30">
-							<span class="input-label">Sprint End Date</span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Sprint End Date</span> <label class="item item-input">
 								<input type="date" placeholder="mm/dd/yyyy" ng-model="data.endDate" name="endDate">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">User Story Count <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">User Story Count <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="userStoryCount"  ng-model="data.userStoryCount" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--3  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Select Users </legend>
-					<div class= "row responsive-sm" ng-show="slideError3">
-						<div class="col" style="color:red;padding:5px;">{{slideError3Message}}</div>
-					</div>
-		    		<div class="row responsive-sm">
-			    		<div class="col col-30">
-							<span class="input-label">Search User <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--3  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Select Users </legend>
+                    <div class="row responsive-sm" ng-show="slideError3">
+                        <div class="col" style="color:red;padding:5px;">{{slideError3Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Search User <span class="assertive">*</span></span> <label class="item item-input">
 				    		  <i class="icon ion-search"></i>
 							  <input type="text" ng-model="data.searchinput" required name="searchinput" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--4  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Spent Hours </legend>
-					<div class= "row responsive-sm" ng-show="slideError4">
-						<div class="col" style="color:red;padding:5px;">{{slideError4Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Requirements <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--4  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Spent Hours </legend>
+                    <div class="row responsive-sm" ng-show="slideError4">
+                        <div class="col" style="color:red;padding:5px;">{{slideError4Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Requirements <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_requirements"  ng-model="data.spentHours_requirements">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Design <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Design <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_design"  ng-model="data.spentHours_design">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Build <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Build <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_build"  ng-model="data.spentHours_build">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Test <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Test <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_test"  ng-model="data.spentHours_test">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Support <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Support <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_support"  ng-model="data.spentHours_support">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Unproductive <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Unproductive <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="spentHours_unproductive"  ng-model="data.spentHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--5  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Remaining Hours</legend>
-					<div class= "row responsive-sm" ng-show="slideError5">
-						<div class="col" style="color:red;padding:5px;">{{slideError5Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Requirements <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--5  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Remaining Hours</legend>
+                    <div class="row responsive-sm" ng-show="slideError5">
+                        <div class="col" style="color:red;padding:5px;">{{slideError5Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Requirements <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_requirements"  ng-model="data.remainingHours_requirements">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Design <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Design <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_design"  ng-model="data.remainingHours_design">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Build <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Build <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_build"  ng-model="data.remainingHours_build">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Test <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Test <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_test"  ng-model="data.remainingHours_test">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Support <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Support <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_support"  ng-model="data.remainingHours_support">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Unproductive <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Unproductive <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="remainingHours_unproductive"  ng-model="data.remainingHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--6  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Estimated Hours</legend>
-					<div class= "row responsive-sm" ng-show="slideError6">
-						<div class="col" style="color:red;padding:5px;">{{slideError6Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Requirements <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--6  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Estimated Hours</legend>
+                    <div class="row responsive-sm" ng-show="slideError6">
+                        <div class="col" style="color:red;padding:5px;">{{slideError6Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Requirements <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_requirements"  ng-model="data.estimatedHours_requirements">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Design <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Design <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_design"  ng-model="data.estimatedHours_design">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Build <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Build <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_build"  ng-model="data.estimatedHours_build">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Test <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Test <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_test"  ng-model="data.estimatedHours_test">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Support <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Support <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_support"  ng-model="data.estimatedHours_support">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Unproductive <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Unproductive <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="estimatedHours_unproductive"  ng-model="data.estimatedHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--7  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Quality Metrics </legend>
-					<div class= "row responsive-sm" ng-show="slideError7">
-						<div class="col" style="color:red;padding:5px;">{{slideError7Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Junit <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--7  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Quality Metrics </legend>
+                    <div class="row responsive-sm" ng-show="slideError7">
+                        <div class="col" style="color:red;padding:5px;">{{slideError7Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Junit <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_junit"  ng-model="data.qualityMetrics_stats_junit">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Sonar Critical <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Sonar Critical <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_sonarCritical"  ng-model="data.qualityMetrics_stats_sonarCritical">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Sonar Major <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Sonar Major <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_sonarMajor"  ng-model="data.qualityMetrics_stats_sonarMajor">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Defects Sev 1 <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Defects Sev 1 <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectSev1"  ng-model="data.qualityMetrics_stats_defectSev1">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Defects Sev 2 <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Defects Sev 2 <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectSev2"  ng-model="data.qualityMetrics_stats_defectSev2">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Defects Sev 3 <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Defects Sev 3 <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectSev3"  ng-model="data.qualityMetrics_stats_defectSev3">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Defects Sev 4 <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Defects Sev 4 <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectSev4"  ng-model="data.qualityMetrics_stats_defectSev4">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Defects Density <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Defects Density <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectDensity"  ng-model="data.qualityMetrics_stats_defectDensity" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-				</fieldset>
-			</ion-slide>
-			<!--8  -->
-			<ion-slide>
-				<fieldset>
-					<legend> Productivity Metrics </legend>
-					<div class= "row responsive-sm" ng-show="slideError8">
-						<div class="col" style="color:red;padding:5px;">{{slideError8Message}}</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Storypoints <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                </fieldset>
+            </ion-slide>
+            <!--8  -->
+            <ion-slide>
+                <fieldset>
+                    <legend> Productivity Metrics </legend>
+                    <div class="row responsive-sm" ng-show="slideError8">
+                        <div class="col" style="color:red;padding:5px;">{{slideError8Message}}</div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Storypoints <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="productivityMetrics_stats_storypoints"  ng-model="data.productivityMetrics_stats_storypoints">
-							</label>
-						</div>
-					</div>
-					<div class="row responsive-sm">
-			    		<div class="col col-0">
-							<span class="input-label">Velocity <span class="assertive">*</span></span>
-				    		<label class="item item-input">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
+                        <div class="col col-0"> <span class="input-label">Velocity <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="productivityMetrics_stats_velocity"  ng-model="data.productivityMetrics_stats_velocity" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-							</label>
-						</div>
-					</div>
-			</ion-slide>
-		</ion-slide-box>
-	</ion-content>
+							</label> </div>
+                    </div>
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>
 </ion-view>

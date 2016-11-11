@@ -1,47 +1,26 @@
 <ion-view view-title="Dashboard" hide-back-button="true" hide-nav-bar="true">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
-    <ion-refresher on-refresh="refresh()"></ion-refresher>
+        <ion-refresher on-refresh="refresh()"></ion-refresher>
         <h4 class="content padding double-padding-x">Charts</h4>
-	    <div class="card animate-fade-slide-in-right">
-	        <div class="item item-divider">
-	            A line chart 
-	        </div>
-	        <div class="item item-text-wrap">
-	            <canvas id="lineCanvas" class="chart chart-line"></canvas>
-	        </div>
-	    </div>
-	    <div class="card animate-fade-slide-in-right">
-	        <div class="item item-divider">
-	            A bar chart
-	        </div>
-	        <div class="item item-text-wrap">
-	            <canvas id="barCanvas"></canvas>
-	        </div>
-	    </div>
-	    <div class="card animate-fade-slide-in-right">
-	        <div class="item item-divider">
-	            A pie chart
-	        </div>
-	        <div class="item item-text-wrap">
-	            <canvas id="pieCanvas"></canvas>
-	        </div>
-	    </div>
-	    <div class="card animate-fade-slide-in-right">
-	        <div class="item item-divider">
-	            A Bubble chart
-	        </div>
-	        <div class="item item-text-wrap">
-	            <canvas id="bubbleCanvas"></canvas>
-	        </div>
-	    </div>
-	    <div class="card animate-fade-slide-in-right">
-	        <div class="item item-divider">
-	            A radar chart
-	        </div>
-	        <div class="item item-text-wrap">
-	            <canvas id="radarCanvas"></canvas>
-	        </div>
-	    </div>
-	    
+        <div class="card animate-fade-slide-in-right">
+            <div class="item item-divider"> A line chart </div>
+            <div class="item item-text-wrap"> <canvas id="lineCanvas" class="chart chart-line"></canvas> </div>
+        </div>
+        <div class="card animate-fade-slide-in-right">
+            <div class="item item-divider"> A bar chart </div>
+            <div class="item item-text-wrap"> <canvas id="barCanvas"></canvas> </div>
+        </div>
+        <div class="card animate-fade-slide-in-right">
+            <div class="item item-divider"> A pie chart </div>
+            <div class="item item-text-wrap"> <canvas id="pieCanvas"></canvas> </div>
+        </div>
+        <div class="card animate-fade-slide-in-right">
+            <div class="item item-divider"> A Bubble chart </div>
+            <div class="item item-text-wrap"> <canvas id="bubbleCanvas"></canvas> </div>
+        </div>
+        <div class="card animate-fade-slide-in-right">
+            <div class="item item-divider"> A radar chart </div>
+            <div class="item item-text-wrap"> <canvas id="radarCanvas"></canvas> </div>
+        </div>
     </ion-content>
 </ion-view>

@@ -1,7 +1,5 @@
-/* global angular, document, window */
 'use strict';
 angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $state, $ionicModal, $ionicPopover, $timeout) {
-    // Form data for the login modal
     $scope.loginData = {};
     $scope.isExpanded = false;
     $scope.hasHeaderFabLeft = false;
@@ -68,51 +66,44 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.logout = function() {
         $state.go('app.login');
     };
-    $rootScope.saveToken = function(token){
-    	 window.localStorage.setItem('token',token);
+    $rootScope.saveToken = function(token) {
+        window.localStorage.setItem('token', token);
     };
-    $rootScope.getToken = function(token){
-    	var token = window.localStorage.getItem('token');
-    	return token;
+    $rootScope.getToken = function(token) {
+        var token = window.localStorage.getItem('token');
+        return token;
     };
-    
-}).controller('LoginCtrl', function($scope,$rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
+}).controller('LoginCtrl', function($scope, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
     $scope.$parent.clearFabs();
     $timeout(function() {
         $scope.$parent.hideHeader();
     }, 0);
     ionicMaterialInk.displayEffect();
     $scope.login = function(data) {
-        //$state.go('app.profile');
-    	$scope.authTokenForLogin= btoa(data.username+":"+data.password);
-    	$rootScope.saveToken($scope.authTokenForLogin);
-    	loginService.login($scope.authTokenForLogin).then(function(loginResp) {
-    		$scope.errorObj = false;
-    		$state.go('app.profile');
-    		$scope.$parent.showHeader();
-		    $scope.$parent.clearFabs();
-		    $scope.isExpanded = false;
-		    $scope.$parent.setExpanded(false);
-		    $scope.$parent.setHeaderFab(false);
-
-		    // Set Motion
-		    $timeout(function() {
-		        ionicMaterialMotion.slideUp({
-		            selector: '.slide-up'
-		        });
-		    }, 300);
-
-		    $timeout(function() {
-		        ionicMaterialMotion.fadeSlideInRight({
-		            startVelocity: 3000
-		        });
-		    }, 700);
-
-		    // Set Ink
-		    ionicMaterialInk.displayEffect();
+        $scope.authTokenForLogin = btoa(data.username + ":" + data.password);
+        $rootScope.saveToken($scope.authTokenForLogin);
+        loginService.login($scope.authTokenForLogin).then(function(loginResp) {
+            $scope.errorObj = false;
+            $state.go('app.profile');
+            $scope.$parent.showHeader();
+            $scope.$parent.clearFabs();
+            $scope.isExpanded = false;
+            $scope.$parent.setExpanded(false);
+            $scope.$parent.setHeaderFab(false);
+            $timeout(function() {
+                ionicMaterialMotion.slideUp({
+                    selector: '.slide-up'
+                });
+            }, 300);
+            $timeout(function() {
+                ionicMaterialMotion.fadeSlideInRight({
+                    startVelocity: 3000
+                });
+            }, 700);
+            ionicMaterialInk.displayEffect();
         }, function(err) {
-        	$scope.errorObj = err.data.message;
-        	console.log("Failed!, something went wrong. " +err.data.message);
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
         });
     }
 }).controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
@@ -402,11 +393,11 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     }, 700);
     ionicMaterialInk.displayEffect();
 }).controller('ActivityCtrl', function($scope, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
-	programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
-		$scope.programOption = loginResp;
+    programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
+        $scope.programOption = loginResp;
     }, function(err) {
-    	$scope.errorObj = err.data.message;
-    	console.log("Failed!, something went wrong. " +err.data.message);
+        $scope.errorObj = err.data.message;
+        console.log("Failed!, something went wrong. " + err.data.message);
     });
     $scope.$parent.showHeader();
     //$scope.$parent.clearFabs();
@@ -422,111 +413,96 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     ionicMaterialInk.displayEffect();
     $scope.currentSlide = 0;
     $scope.disableSwipe = function() {
-	   $ionicSlideBoxDelegate.enableSlide(false);
-	};
+        $ionicSlideBoxDelegate.enableSlide(false);
+    };
     $scope.nextSlide = function(data, $event) {
-    	$scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
-    	if($scope.currentSlide === 0){
-    		if(data.selectProgram === undefined || data.selectProject == undefined){
-    			$scope.slideError1 = true;
-    			$scope.slideError1Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError1 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	} else if($scope.currentSlide === 1){
-    		if(data.sprint === undefined || data.userStoryCount === undefined){
-    			$scope.slideError2 = true;
-    			$scope.slideError2Message = ERROR.errorMessage;
-    		}else if(data.sprint < 0 || data.userStoryCount < 0){
-    			$scope.slideError2 = true;
-    			$scope.slideError2Message = ERROR.errorMessageValue;
-    		}else{
-    			$scope.slideError2 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else if($scope.currentSlide === 2){
-    		if(data.searchinput === undefined){
-    			$scope.slideError3 = true;
-    			$scope.slideError3Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError3 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else if($scope.currentSlide === 3){
-    		if(data.spentHours_requirements === undefined || data.spentHours_design === undefined || 
-    				data.spentHours_build === undefined || data.spentHours_test === undefined || 
-    				data.spentHours_support === undefined || data.spentHours_unproductive === undefined ){
-    			$scope.slideError4 = true;
-    			$scope.slideError4Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError4 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else if($scope.currentSlide === 4){
-    		if(data.remainingHours_requirements === undefined || data.remainingHours_design === undefined || 
-    				data.remainingHours_build === undefined || data.remainingHours_test === undefined || 
-    				data.remainingHours_support === undefined || data.remainingHours_unproductive === undefined ){
-    			$scope.slideError5 = true;
-    			$scope.slideError5Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError5 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else if($scope.currentSlide === 5){
-    		if(data.estimatedHours_requirements === undefined || data.estimatedHours_design === undefined || 
-    				data.estimatedHours_build === undefined || data.estimatedHours_test === undefined || 
-    				data.estimatedHours_support === undefined || data.estimatedHours_unproductive === undefined ){
-    			$scope.slideError6 = true;
-    			$scope.slideError6Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError6 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else if($scope.currentSlide === 6){
-    		if(data.qualityMetrics_stats_junit === undefined || data.qualityMetrics_stats_sonarCritical === undefined || 
-    				data.qualityMetrics_stats_sonarMajor === undefined || data.qualityMetrics_stats_defectSev1 === undefined || 
-    				data.qualityMetrics_stats_defectSev2 === undefined || data.qualityMetrics_stats_defectSev3 === undefined ||
-    				data.qualityMetrics_stats_defectSev4 === undefined || data.qualityMetrics_stats_defectDensity === undefined ){
-    			$scope.slideError7 = true;
-    			$scope.slideError7Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError7 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    		
-    	}else {
-    		if(data.productivityMetrics_stats_storypoints === undefined || data.productivityMetrics_stats_velocity === undefined){
-    			$scope.slideError8 = true;
-    			$scope.slideError8Message = ERROR.errorMessage;
-    		}else{
-    			$scope.slideError8 = false;
-    			$scope.currentSlide++;
-    			$ionicSlideBoxDelegate.next();
-    		}
-    	}
-    	if(data.length===undefined){
-    		$ionicSlideBoxDelegate.stop();
-    		$event.preventDefault();
-    	}
+        $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
+        if ($scope.currentSlide === 0) {
+            if (data.selectProgram === undefined || data.selectProject == undefined) {
+                $scope.slideError1 = true;
+                $scope.slideError1Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError1 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 1) {
+            if (data.sprint === undefined || data.userStoryCount === undefined) {
+                $scope.slideError2 = true;
+                $scope.slideError2Message = ERROR.errorMessage;
+            } else if (data.sprint < 0 || data.userStoryCount < 0) {
+                $scope.slideError2 = true;
+                $scope.slideError2Message = ERROR.errorMessageValue;
+            } else {
+                $scope.slideError2 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 2) {
+            if (data.searchinput === undefined) {
+                $scope.slideError3 = true;
+                $scope.slideError3Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError3 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 3) {
+            if (data.spentHours_requirements === undefined || data.spentHours_design === undefined || data.spentHours_build === undefined || data.spentHours_test === undefined || data.spentHours_support === undefined || data.spentHours_unproductive === undefined) {
+                $scope.slideError4 = true;
+                $scope.slideError4Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError4 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 4) {
+            if (data.remainingHours_requirements === undefined || data.remainingHours_design === undefined || data.remainingHours_build === undefined || data.remainingHours_test === undefined || data.remainingHours_support === undefined || data.remainingHours_unproductive === undefined) {
+                $scope.slideError5 = true;
+                $scope.slideError5Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError5 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 5) {
+            if (data.estimatedHours_requirements === undefined || data.estimatedHours_design === undefined || data.estimatedHours_build === undefined || data.estimatedHours_test === undefined || data.estimatedHours_support === undefined || data.estimatedHours_unproductive === undefined) {
+                $scope.slideError6 = true;
+                $scope.slideError6Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError6 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else if ($scope.currentSlide === 6) {
+            if (data.qualityMetrics_stats_junit === undefined || data.qualityMetrics_stats_sonarCritical === undefined || data.qualityMetrics_stats_sonarMajor === undefined || data.qualityMetrics_stats_defectSev1 === undefined || data.qualityMetrics_stats_defectSev2 === undefined || data.qualityMetrics_stats_defectSev3 === undefined || data.qualityMetrics_stats_defectSev4 === undefined || data.qualityMetrics_stats_defectDensity === undefined) {
+                $scope.slideError7 = true;
+                $scope.slideError7Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError7 = false;
+                $scope.currentSlide++;
+                $ionicSlideBoxDelegate.next();
+            }
+        } else {
+            if (data.productivityMetrics_stats_storypoints === undefined || data.productivityMetrics_stats_velocity === undefined) {
+                $scope.slideError8 = true;
+                $scope.slideError8Message = ERROR.errorMessage;
+            } else {
+                $scope.slideError8 = false;
+                $scope.currentSlide++;
+                console.log(data);
+                $ionicSlideBoxDelegate.next();
+            }
+        }
+        if (data.length === undefined) {
+            $ionicSlideBoxDelegate.stop();
+            $event.preventDefault();
+        }
     }
     $scope.previousSlide = function() {
-    	$scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
-    	$scope.currentSlide--;
-    	$ionicSlideBoxDelegate.previous();
+        $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
+        $scope.currentSlide--;
+        $ionicSlideBoxDelegate.previous();
     }
 }).controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.$parent.showHeader();
@@ -534,7 +510,6 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab(false);
-    // Activate ink for controller
     ionicMaterialInk.displayEffect();
     ionicMaterialMotion.pushDown({
         selector: '.push-down'
