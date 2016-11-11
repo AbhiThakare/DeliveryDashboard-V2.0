@@ -401,7 +401,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         });
     }, 700);
     ionicMaterialInk.displayEffect();
-}).controller('ActivityCtrl', function($scope, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService) {
+}).controller('ActivityCtrl', function($scope, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
 	programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
 		$scope.programOption = loginResp;
     }, function(err) {
@@ -421,12 +421,15 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.data = {};
     ionicMaterialInk.displayEffect();
     $scope.currentSlide = 0;
-    $scope.nextSlide = function(data) {
+    $scope.disableSwipe = function() {
+	   $ionicSlideBoxDelegate.enableSlide(false);
+	};
+    $scope.nextSlide = function(data, $event) {
     	$scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
     	if($scope.currentSlide === 0){
     		if(data.selectProgram === undefined || data.selectProject == undefined){
     			$scope.slideError1 = true;
-    			$scope.slideError1Message = '* Are Mandatory.';
+    			$scope.slideError1Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError1 = false;
     			$scope.currentSlide++;
@@ -436,10 +439,10 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     	} else if($scope.currentSlide === 1){
     		if(data.sprint === undefined || data.userStoryCount === undefined){
     			$scope.slideError2 = true;
-    			$scope.slideError2Message = "* Are Mandatory.";
+    			$scope.slideError2Message = ERROR.errorMessage;
     		}else if(data.sprint < 0 || data.userStoryCount < 0){
     			$scope.slideError2 = true;
-    			$scope.slideError2Message = "Values Can't be -Ve.";
+    			$scope.slideError2Message = ERROR.errorMessageValue;
     		}else{
     			$scope.slideError2 = false;
     			$scope.currentSlide++;
@@ -449,7 +452,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     	}else if($scope.currentSlide === 2){
     		if(data.searchinput === undefined){
     			$scope.slideError3 = true;
-    			$scope.slideError3Message = "* Are Mandatory.";
+    			$scope.slideError3Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError3 = false;
     			$scope.currentSlide++;
@@ -461,7 +464,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     				data.spentHours_build === undefined || data.spentHours_test === undefined || 
     				data.spentHours_support === undefined || data.spentHours_unproductive === undefined ){
     			$scope.slideError4 = true;
-    			$scope.slideError4Message = "* Are Mandatory.";
+    			$scope.slideError4Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError4 = false;
     			$scope.currentSlide++;
@@ -473,7 +476,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     				data.remainingHours_build === undefined || data.remainingHours_test === undefined || 
     				data.remainingHours_support === undefined || data.remainingHours_unproductive === undefined ){
     			$scope.slideError5 = true;
-    			$scope.slideError5Message = "* Are Mandatory.";
+    			$scope.slideError5Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError5 = false;
     			$scope.currentSlide++;
@@ -485,7 +488,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     				data.estimatedHours_build === undefined || data.estimatedHours_test === undefined || 
     				data.estimatedHours_support === undefined || data.estimatedHours_unproductive === undefined ){
     			$scope.slideError6 = true;
-    			$scope.slideError6Message = "* Are Mandatory.";
+    			$scope.slideError6Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError6 = false;
     			$scope.currentSlide++;
@@ -498,7 +501,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     				data.qualityMetrics_stats_defectSev2 === undefined || data.qualityMetrics_stats_defectSev3 === undefined ||
     				data.qualityMetrics_stats_defectSev4 === undefined || data.qualityMetrics_stats_defectDensity === undefined ){
     			$scope.slideError7 = true;
-    			$scope.slideError7Message = "* Are Mandatory.";
+    			$scope.slideError7Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError7 = false;
     			$scope.currentSlide++;
@@ -508,12 +511,16 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     	}else {
     		if(data.productivityMetrics_stats_storypoints === undefined || data.productivityMetrics_stats_velocity === undefined){
     			$scope.slideError8 = true;
-    			$scope.slideError8Message = "* Are Mandatory.";
+    			$scope.slideError8Message = ERROR.errorMessage;
     		}else{
     			$scope.slideError8 = false;
     			$scope.currentSlide++;
     			$ionicSlideBoxDelegate.next();
     		}
+    	}
+    	if(data.length===undefined){
+    		$ionicSlideBoxDelegate.stop();
+    		$event.preventDefault();
     	}
     }
     $scope.previousSlide = function() {

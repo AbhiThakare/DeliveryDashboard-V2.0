@@ -6,7 +6,7 @@
 		<button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
 			<i ng-show="currentSlide <= 6" class="icon ion-chevron-right"></i><span  ng-show="currentSlide >= 7"> Done  </span>
 		</button>
-		<ion-slide-box>
+		<ion-slide-box  ng-init="disableSwipe()">
 		<!-- 1 -->
 		<ion-slide>
 			<fieldset>
@@ -31,7 +31,7 @@
 							<span class="input-label">Project <span class="assertive">*</span></span>
 						</div>
 						<div class="col col-60">
-							<select  name="selectCategory" required="" ng-model="data.selectProject" ng-change="clearData()" class="item">
+							<select  name="selectCategory" required="" ng-model="data.selectProject" ng-change="clearData()" class="item" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 								<option ng-repeat="option in categoryOptions"  ng-value="option.categoryId">{{option.name}}</option>
 								<option value="123">123</option>
 								<option value="456">456</option>
@@ -80,7 +80,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">User Story Count <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="userStoryCount"  ng-model="data.userStoryCount">
+								<input type="number" placeholder="" required name="userStoryCount"  ng-model="data.userStoryCount" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -98,7 +98,7 @@
 							<span class="input-label">Search User <span class="assertive">*</span></span>
 				    		<label class="item item-input">
 				    		  <i class="icon ion-search"></i>
-							  <input type="text" ng-model="data.searchinput" required name="searchinput">
+							  <input type="text" ng-model="data.searchinput" required name="searchinput" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -155,7 +155,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">Unproductive <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="spentHours_unproductive"  ng-model="data.spentHours_unproductive">
+								<input type="number" placeholder="" required name="spentHours_unproductive"  ng-model="data.spentHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -212,7 +212,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">Unproductive <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="remainingHours_unproductive"  ng-model="data.remainingHours_unproductive">
+								<input type="number" placeholder="" required name="remainingHours_unproductive"  ng-model="data.remainingHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -269,7 +269,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">Unproductive <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="estimatedHours_unproductive"  ng-model="data.estimatedHours_unproductive">
+								<input type="number" placeholder="" required name="estimatedHours_unproductive"  ng-model="data.estimatedHours_unproductive" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -342,7 +342,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">Defects Density <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="qualityMetrics_stats_defectDensity"  ng-model="data.qualityMetrics_stats_defectDensity">
+								<input type="number" placeholder="" required name="qualityMetrics_stats_defectDensity"  ng-model="data.qualityMetrics_stats_defectDensity" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
@@ -367,7 +367,7 @@
 			    		<div class="col col-0">
 							<span class="input-label">Velocity <span class="assertive">*</span></span>
 				    		<label class="item item-input">
-								<input type="number" placeholder="" required name="productivityMetrics_stats_velocity"  ng-model="data.productivityMetrics_stats_velocity">
+								<input type="number" placeholder="" required name="productivityMetrics_stats_velocity"  ng-model="data.productivityMetrics_stats_velocity" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label>
 						</div>
 					</div>
