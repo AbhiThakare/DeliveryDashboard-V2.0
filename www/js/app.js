@@ -10,6 +10,16 @@ angular.module('dashboard', ['ionic', 'ionic-material', 'ionMdInput', 'chart.js'
             StatusBar.styleDefault();
         }
     });
+}).run(function($rootScope, $state, $ionicPopup) {
+    $rootScope.$on('$stateChangeStart', function(event, next, nextParams, fromState) {
+    	var authToken = window.localStorage.getItem('token');
+        if(authToken === "undefined" || authToken === null) {
+            if (next.name !== 'app.login') {
+                event.preventDefault();
+                $state.go('app.login');
+            }
+        }
+    });
 }).config(function($stateProvider, $urlRouterProvider, $ionicConfigProvider) {
     // Turn off caching for demo simplicity's sake
 });

@@ -1,9 +1,18 @@
 <ion-view view-title="Add Sprint Data" hide-back-button="true" hide-nav-bar="true">
-    <ion-content ng-class="{expanded:$scope.isExpanded}" class="animate-fade-slide-in"> <button ng-click="previousSlide(data)" id="fab-profile2" type="submit" class="button button-fab button-fab-top-left button-energized-900" nav-view="active">
+	<ion-nav-buttons side="left">
+	    <button class="button back-button buttons button-clear header-item" ng-click="goBack()">
+	      <i class="icon ion-ios-arrow-back"> </i> 
+	    </button>
+  	</ion-nav-buttons>
+	<div class="nexPrevButtton">
+		<button ng-click="previousSlide(data)" id="fab-profile2" type="submit" class="button button-fab button-fab-top-left button-energized-900" nav-view="active">
 			<i class="icon ion-chevron-left"></i>
-		</button> <button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
+		</button> 
+		<button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
 			<i ng-show="currentSlide <= 6" class="icon ion-chevron-right"></i><span  ng-show="currentSlide >= 7"> Done  </span>
 		</button>
+	</div>
+    <ion-content ng-class="{expanded:$scope.isExpanded}" class="animate-fade-slide-in"> 
         <ion-slide-box ng-init="disableSwipe()">
             <!-- 1 -->
             <ion-slide>
@@ -15,19 +24,17 @@
                     <div class="row responsive-sm">
                         <div class="col col-30"> <span class="input-label">Program<span class="assertive">*</span></span>
                         </div>
-                        <div class="col col-60"> <select name="selectCategory" required="" ng-model="data.selectProgram" ng-change="clearData()" class="item">
-								<!-- <option ng-repeat="option in programOption"  ng-value="option.id">{{option.name}}</option> -->
-								<option value="123">123</option>
-								<option value="456">456</option>
+                        <div class="col col-60"> 
+                        	<select name="selectCategory" required="" ng-model="data.selectProgram" class="item" ng-change="getAllProjects(data.selectProgram)">
+								<option ng-repeat="option in programOption"  ng-value="option.id">{{option.name}}</option>
 							</select> </div>
                     </div>
                     <div class="row responsive-sm">
                         <div class="col col-30"> <span class="input-label">Project <span class="assertive">*</span></span>
                         </div>
-                        <div class="col col-60"> <select name="selectCategory" required="" ng-model="data.selectProject" ng-change="clearData()" class="item" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
-								<option ng-repeat="option in categoryOptions"  ng-value="option.categoryId">{{option.name}}</option>
-								<option value="123">123</option>
-								<option value="456">456</option>
+                        <div class="col col-60"> 
+                        	<select name="selectCategory" required="" ng-model="data.selectProject" class="item" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
+								<option ng-repeat="option in projectOptions"  ng-value="option.id">{{option.name}}</option>
 							</select> </div>
                     </div>
                 </fieldset>
@@ -238,11 +245,6 @@
                     <div class="row responsive-sm">
                         <div class="col col-0"> <span class="input-label">Defects Sev 4 <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="qualityMetrics_stats_defectSev4"  ng-model="data.qualityMetrics_stats_defectSev4">
-							</label> </div>
-                    </div>
-                    <div class="row responsive-sm">
-                        <div class="col col-0"> <span class="input-label">Defects Density <span class="assertive">*</span></span> <label class="item item-input">
-								<input type="number" placeholder="" required name="qualityMetrics_stats_defectDensity"  ng-model="data.qualityMetrics_stats_defectDensity" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label> </div>
                     </div>
                 </fieldset>

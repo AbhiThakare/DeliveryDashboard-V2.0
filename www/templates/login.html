@@ -1,4 +1,4 @@
-<ion-view title="Login" hide-nav-bar="true" id="page16" style="background-color:#;" class=" ">
+<ion-view title="Login" hide-nav-bar="true" id="page16" style="background-color:#;" class="login">
     <ion-content class="has-header" scroll="true" padding="true" style="background: url(img/login-background.jpg) center; background-size: cover;">
         <h2 id="signup-heading2" style="color:#000000;font-weight:400;text-align:center;" class=" "> <img style="text-align:center;" src='img/icon.png' width="200" height="200" alt="Login" /> </h2>
         <form class="list animated bounceIn " name="loginform" class="css-form" novalidate id="login-form7" ng-submit="loginform.$valid && login(data)">
@@ -15,6 +15,21 @@
                 <div ng-show="loginform.$submitted || loginform.password.$touched">
                     <div style="color:red;margin:5px;padding:5px;" ng-show="loginform.password.$error.required">Please enter Password.</div>
                 </div>
-            </ion-list> <input class="button button-block button-assertive-900" type="submit" id="login-button13" value="Login" /> </form>
+            </ion-list>
+            <input class="button button-block button-assertive" type="submit" id="login-button13" value="Login" />
+            <div class="row row-no-padding">
+                 <div class="col">
+                     <button class="button button-clear button-light no-padding">
+                         Forgot password?
+                     </button>
+                 </div>
+
+                 <div class="col text-right">
+                     <button class="button button-clear button-light no-padding" ng-click="signupShow()">
+                         Sign up
+                     </button>
+                 </div>
+             </div>
+            </form>
     </ion-content>
 </ion-view>
