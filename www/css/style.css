@@ -10,8 +10,23 @@ h1 {
     margin-top:4%;
 }
 
+.nexPrevButtton {
+	margin-top: 15%;
+    position: relative;
+}
+
 .item-md-label .input-label {
 	color: #fff;
+}
+
+.ion-close-circled, .ion-close-circled:hover {
+	color: #fff;
+}
+
+fieldset .item{
+    border: 1px solid #4195fc; /* some kind of blue border */
+    /* other CSS styles */
+
 }
 /* Utilities
 ==================================*/
@@ -86,11 +101,15 @@ p {
 }
 @media (min-width:1025px) { 
 	.scroll{
-		padding-left: 10%;
-		padding-right: 10%;
+		padding-left: 10% !important;
+		padding-right: 10% !important;
 	}
 	.slider-slide {
 		margin-top: 1%;
+	}
+	.nexPrevButtton {
+		margin-top: 5%;
+	    position: relative;
 	}
 }
 legend{
@@ -101,4 +120,18 @@ legend{
 }
 .input-label{
 	font-weight: 500;
+}
+
+
+.figure{
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    text-align: center;
+    line-height: 150px;
+    transform: rotate(-45deg);
+    color:#fff;
+    
 }

@@ -63,7 +63,6 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
         }
     }).state('app.profile', {
         url: '/profile',
-        cache: false,
         views: {
             'menuContent': {
                 templateUrl: 'templates/profile.html',

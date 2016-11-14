@@ -64,6 +64,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         }
     };
     $scope.logout = function() {
+    	window.localStorage.removeItem('token');
         $state.go('app.login');
     };
     $rootScope.saveToken = function(token) {
@@ -73,16 +74,121 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         var token = window.localStorage.getItem('token');
         return token;
     };
-}).controller('LoginCtrl', function($scope, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
+    $rootScope.getcolor = function(brightness) {
+        var rgb = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+        var mix = [brightness*51, brightness*51, brightness*51]; //51 => 255/5
+        var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function(x){ return Math.round(x/2.0)})
+        return "rgba(" + mixedrgb.join(",") + ",0.8)";
+        //return "rgba("+(Math.floor(Math.random() * 255))+", "+(Math.floor(Math.random() * 255))+","+(Math.floor(Math.random() * 255))+",0.8)";
+        //return '#' + Math.random().toString(16).substr(-6);
+    }
+    $rootScope.getBarGraphData = function(inputData, stacked, chartType) {
+    	var labels = [];
+	    var data = [];
+	    var datasets = [];
+	    var option;
+	    for (var j = 0; j <  inputData[0].buckets.length; j++) {
+		    for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
+				data[i] = [];
+			}
+	    }
+	    for (var j = 0; j <  inputData[0].buckets.length; j++) {
+	    	if( inputData[0].buckets[j].key_as_string !== undefined){
+				labels.push((inputData[0].buckets[j].key_as_string).substring(0, 10));
+	    	}else{
+				labels.push((inputData[0].buckets[j].key).substring(0, 10));
+	    	}
+			for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
+				data[i].push(inputData[0].buckets[j].aggregations[i].value);
+			}
+		}
+	    if(chartType === 'bar'){
+	    	for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
+				datasets.push({
+		    		'label': inputData[0].buckets[0].aggregations[j].name,
+		            'backgroundColor': $rootScope.getcolor(4),
+		            'borderColor': $rootScope.getcolor(1),
+		            'borderWidth': 0.6,
+		            'pointBackgroundColor': $rootScope.getcolor(4),
+		            'pointBorderColor': $rootScope.getcolor(1),
+		            'data': data[j]
+		    	});
+	    	
+	    	}
+		    option = {
+	            animation: {
+	                duration: 5000
+	            },
+	            barThickness: 1,
+	            scales: {
+	                xAxes: [{
+	                    stacked: stacked,
+	                    barPercentage: 0.6,
+	                    categoryPercentage: 0.2
+	                }],
+	                yAxes: [{
+	                    stacked: stacked
+	                }]
+	            }
+	        };
+	    } else if(chartType === 'line'){
+		    for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
+				datasets.push({
+		    		'label': inputData[0].buckets[0].aggregations[j].name,
+		            'backgroundColor': $rootScope.getcolor(4),
+		            'borderColor': $rootScope.getcolor(1),
+		            'lineTension': 0.5,
+		            'borderWidth': 2,
+		            'fill': true,
+		            'pointBackgroundColor': $rootScope.getcolor(4),
+		            'pointBorderColor': $rootScope.getcolor(1),
+		            'data': data[j]
+		    	});
+	    	
+	    	}
+	    	 option = {
+	                animation: {
+	                    duration: 5000,
+	                },
+	                scales: {
+	                    xAxes: [{
+	                        display: true
+	                    }]
+	                }
+	            }
+	    }
+	    var outputData = {
+            labels:labels,
+            datasets: datasets,
+            option: option
+        };
+    	return outputData;
+    };
+}).controller('LoginCtrl', function($scope, $ionicModal, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
     $scope.$parent.clearFabs();
-    $timeout(function() {
-        $scope.$parent.hideHeader();
-    }, 0);
-    ionicMaterialInk.displayEffect();
+    $ionicModal.fromTemplateUrl('templates/signup.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.signupModal = modal;
+    });
+    $ionicModal.fromTemplateUrl('templates/signup.html', {
+        scope: $scope,
+        animation: 'slide-in-up'
+    }).then(function(modal) {
+        $scope.signupModal = modal;
+    });
+    $scope.$parent.hideHeader();
+    $scope.signupShow = function(){
+    	$scope.signupModal.show();
+    }
+    $scope.closeSignupModal = function() {
+        $scope.signupModal.hide();
+    }
     $scope.login = function(data) {
         $scope.authTokenForLogin = btoa(data.username + ":" + data.password);
-        $rootScope.saveToken($scope.authTokenForLogin);
-        loginService.login($scope.authTokenForLogin).then(function(loginResp) {
+        loginService.login($scope.authTokenForLogin, data).then(function(loginResp) {
+        	$rootScope.saveToken($scope.authTokenForLogin);
             $scope.errorObj = false;
             $state.go('app.profile');
             $scope.$parent.showHeader();
@@ -106,108 +212,181 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             console.log("Failed!, something went wrong. " + err.data.message);
         });
     }
+    var authToken = window.localStorage.getItem('token');
+    if(authToken !== "undefined" && authToken !== null){
+    	$scope.errorObj = false;
+        $state.go('app.profile');
+    }
 }).controller('FriendsCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
-    // Set Header
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.$parent.setHeaderFab('left');
-    // Delay expansion
     $timeout(function() {
         $scope.isExpanded = true;
         $scope.$parent.setExpanded(true);
     }, 300);
-    // Set Motion
     ionicMaterialMotion.fadeSlideInRight();
-    // Set Ink
     ionicMaterialInk.displayEffect();
-}).controller('ProfileCtrl', function($scope, $state, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk) {
+}).controller('ProfileCtrl', function($scope, $rootScope, $state, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, graphService) {
+	$scope.$parent.showHeader();
+    $scope.$parent.clearFabs();
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $timeout(function() {
+        ionicMaterialMotion.fadeSlideInRight({
+            startVelocity: 3000
+        });
+    }, 700);
+    ionicMaterialInk.displayEffect();
     function getcolor() {
         return '#' + Math.random().toString(16).substr(-6);
     }
-    $scope.refresh = function() {
-        location.reload();
-    };
+    graphService.getCircleData($rootScope.getToken()).then(function(circleResp) {
+        $scope.circleResp = circleResp
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+   
+    graphService.getSpentEffortHistogram($rootScope.getToken()).then(function(SpentEffortResp) {
+        $scope.spentEffortData= $rootScope.getBarGraphData(SpentEffortResp, true,'bar');
+        var bar = document.getElementById("spentEffortHistogramCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.spentEffortData,
+            options: $scope.spentEffortData.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+     });
+    graphService.getBurndown($rootScope.getToken()).then(function(burnDownResp) {
+        $scope.burndownData = $rootScope.getBarGraphData(burnDownResp,true, 'line');
+        var bar = document.getElementById("burndownCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'line',
+            data: $scope.burndownData,
+            options: $scope.burndownData.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+     });
+    graphService.getproductivityHistogramCanvas($rootScope.getToken()).then(function(productivityResp) {
+        $scope.productivityResp= $rootScope.getBarGraphData(productivityResp,false,'bar');
+        var bar = document.getElementById("productivityHistogramCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.productivityResp,
+            options: $scope.productivityResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    graphService.getQualityHistogram($rootScope.getToken()).then(function(qualityHistogramResp) {
+        $scope.qualityHistogramResp= $rootScope.getBarGraphData(qualityHistogramResp ,true,'bar');
+        var bar = document.getElementById("qualityHistogramCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.qualityHistogramResp,
+            options: $scope.qualityHistogramResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    graphService.getTeamHistogram($rootScope.getToken()).then(function(teamResp) {
+        $scope.teamResp= $rootScope.getBarGraphData(teamResp ,true,'bar');
+        var bar = document.getElementById("teamCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.teamResp,
+            options: $scope.teamResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    graphService.getProjectProductivity($rootScope.getToken()).then(function(projectProductivityStatResp) {
+        $scope.projectProductivityStatResp= $rootScope.getBarGraphData(projectProductivityStatResp ,false,'bar');
+        var bar = document.getElementById("projectProductivityStatCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.projectProductivityStatResp,
+            options: $scope.projectProductivityStatResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    graphService.getProjectQuality($rootScope.getToken()).then(function(projectQualityStatResp) {
+        $scope.projectQualityStatResp= $rootScope.getBarGraphData(projectQualityStatResp ,false,'bar');
+        var bar = document.getElementById("projectQualityStatCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.projectQualityStatResp,
+            options: $scope.projectQualityStatResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    
+    graphService.getProjectSpentEfforts($rootScope.getToken()).then(function(projectSpentEffortsStatResp) {
+        $scope.projectSpentEffortsStatResp= $rootScope.getBarGraphData(projectSpentEffortsStatResp ,false,'bar');
+        var bar = document.getElementById("projectSpentEffortsStatCanvas").getContext("2d");
+        var myBarChart = new Chart(bar, {
+            type: 'bar',
+            data: $scope.projectSpentEffortsStatResp,
+            options: $scope.projectSpentEffortsStatResp.option
+        });
+     }, function(err) {
+         $scope.errorObj = err.data.message;
+         console.log("Failed!, something went wrong. " + err.data.message);
+    });
+    
+    
     var lineChartData = {
-        labels: ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5", "Data 6", "Data 7"],
-        datasets: [{
-            label: "123",
-            backgroundColor: getcolor(),
-            borderColor: getcolor(),
-            lineTension: 0.1,
-            fill: false,
-            borderWidth: 1,
-            pointBackgroundColor: getcolor(),
-            pointBorderColor: getcolor(),
-            data: [20, 30, 80, 20, 40, 10, 60]
-        }, {
-            label: "123",
-            fill: false,
-            backgroundColor: getcolor(),
-            borderColor: getcolor(),
-            lineTension: 0.1,
-            borderWidth: 1,
-            pointBackgroundColor: getcolor(),
-            pointBorderColor: getcolor(),
-            data: [60, 10, 40, 30, 80, 30, 20]
-        }]
-    }
-    var line = document.getElementById("lineCanvas").getContext("2d");
-    new Chart(line, {
-        type: 'line',
-        data: lineChartData,
-        options: {
-            animation: {
-                duration: 5000
-            },
-            scales: {
-                xAxes: [{
-                    display: false
-                }]
-            }
+            labels: ["Data 1", "Data 2", "Data 3", "Data 4", "Data 5", "Data 6", "Data 7"],
+            datasets: [{
+                label: "123",
+                backgroundColor: getcolor(),
+                borderColor: getcolor(),
+                lineTension: 0.5,
+                fill: false,
+                borderWidth: 1,
+                pointBackgroundColor: getcolor(),
+                pointBorderColor: getcolor(),
+                data: [20, 30, 80, 20, 40, 10, 60]
+            }, {
+                label: "123",
+                fill: false,
+                backgroundColor: getcolor(),
+                borderColor: getcolor(),
+                lineTension:0.5,
+                borderWidth: 1,
+                pointBackgroundColor: getcolor(),
+                pointBorderColor: getcolor(),
+                data: [60, 10, 40, 30, 80, 30, 20]
+            }]
         }
-    });
-    var barData = {
-        labels: ["January", "February", "March", "April", "May", "June"],
-        datasets: [{
-            label: "123",
-            backgroundColor: getcolor(),
-            borderColor: getcolor(),
-            borderWidth: 0.5,
-            hoverBorderColor: getcolor(),
-            pointBackgroundColor: getcolor(),
-            pointBorderColor: getcolor(),
-            hoverBackgroundColor: getcolor(),
-            data: [456, 479, 324, 569, 702, 600]
-        }, {
-            backgroundColor: getcolor(),
-            borderColor: getcolor(),
-            borderWidth: 0.5,
-            hoverBorderColor: getcolor(),
-            pointBackgroundColor: getcolor(),
-            pointBorderColor: getcolor(),
-            hoverBackgroundColor: getcolor(),
-            data: [364, 504, 605, 400, 345, 320]
-        }]
-    }
-    var bar = document.getElementById("barCanvas").getContext("2d");
-    var myBarChart = new Chart(bar, {
-        type: 'bar',
-        data: barData,
-        options: {
-            animation: {
-                duration: 5000
-            },
-            barThickness: 1,
-            scales: {
-                xAxes: [{
-                    stacked: false
-                }],
-                yAxes: [{
-                    stacked: false
-                }]
+        var line = document.getElementById("lineCanvas").getContext("2d");
+        new Chart(line, {
+            type: 'line',
+            data: lineChartData,
+            options: {
+                animation: {
+                    duration: 5000
+                },
+                scales: {
+                    xAxes: [{
+                        display: false
+                    }]
+                }
             }
-        }
-    });
+        });
     var piedata = {
         labels: ["Red", "Blue", "Yellow"],
         datasets: [{
@@ -381,26 +560,33 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             }
         }
     });
-    $scope.$parent.showHeader();
-    $scope.$parent.clearFabs();
-    $scope.isExpanded = false;
-    $scope.$parent.setExpanded(false);
-    $scope.$parent.setHeaderFab(false);
-    $timeout(function() {
-        ionicMaterialMotion.fadeSlideInRight({
-            startVelocity: 3000
-        });
-    }, 700);
-    ionicMaterialInk.displayEffect();
-}).controller('ActivityCtrl', function($scope, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
-    programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
+}).controller('ActivityCtrl', function($scope, $state, $filter, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
+	$scope.goBack = function(){
+		$state.go('app.profile');
+		$scope.$parent.showHeader();
+        $scope.$parent.clearFabs();
+        $scope.isExpanded = false;
+        $scope.$parent.setExpanded(false);
+        $scope.$parent.setHeaderFab(false);
+        $timeout(function() {
+            ionicMaterialMotion.slideUp({
+                selector: '.slide-up'
+            });
+        }, 300);
+         $timeout(function() {
+            ionicMaterialMotion.fadeSlideInRight({
+                 startVelocity: 3000
+            });
+        }, 700);
+        ionicMaterialInk.displayEffect();
+	}
+	programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
         $scope.programOption = loginResp;
     }, function(err) {
         $scope.errorObj = err.data.message;
         console.log("Failed!, something went wrong. " + err.data.message);
     });
     $scope.$parent.showHeader();
-    //$scope.$parent.clearFabs();
     $scope.isExpanded = true;
     $scope.$parent.setExpanded(true);
     $scope.$parent.setHeaderFab('right');
@@ -418,7 +604,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.nextSlide = function(data, $event) {
         $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
         if ($scope.currentSlide === 0) {
-            if (data.selectProgram === undefined || data.selectProject == undefined) {
+            if (data.selectProgram === undefined || data.selectProject === undefined) {
                 $scope.slideError1 = true;
                 $scope.slideError1Message = ERROR.errorMessage;
             } else {
@@ -475,7 +661,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                 $ionicSlideBoxDelegate.next();
             }
         } else if ($scope.currentSlide === 6) {
-            if (data.qualityMetrics_stats_junit === undefined || data.qualityMetrics_stats_sonarCritical === undefined || data.qualityMetrics_stats_sonarMajor === undefined || data.qualityMetrics_stats_defectSev1 === undefined || data.qualityMetrics_stats_defectSev2 === undefined || data.qualityMetrics_stats_defectSev3 === undefined || data.qualityMetrics_stats_defectSev4 === undefined || data.qualityMetrics_stats_defectDensity === undefined) {
+            if (data.qualityMetrics_stats_junit === undefined || data.qualityMetrics_stats_sonarCritical === undefined || data.qualityMetrics_stats_sonarMajor === undefined || data.qualityMetrics_stats_defectSev1 === undefined || data.qualityMetrics_stats_defectSev2 === undefined || data.qualityMetrics_stats_defectSev3 === undefined || data.qualityMetrics_stats_defectSev4 === undefined ) {
                 $scope.slideError7 = true;
                 $scope.slideError7Message = ERROR.errorMessage;
             } else {
@@ -492,18 +678,123 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                 $scope.currentSlide++;
                 console.log(data);
                 $ionicSlideBoxDelegate.next();
+                var sprintStatus;
+                data = {
+                        "logDate":$filter('date')(new Date(),"yyyy-MM-dd"+"T00:00:00.000+0530"),
+                        "project":{
+                            "id":data.selectProject
+                        },
+                        "sprint":{
+                            "id":"CI0011",
+                            "sprintNumber":data.sprint,
+                            "status":(data.isSprintActive)?  sprintStatus= "ACTIVE" : sprintStatus="INACTIVE",
+                            "startDate":$filter('date')(data.startDate, "yyyy-MM-dd"+"T00:00:00.000+0530"),
+                            "endDate":$filter('date')(data.startDate, "yyyy-MM-dd"+"T00:00:00.000+0530"),
+                            "userStoryCount":data.userStoryCount,
+                            "teamMembers":[
+                                {
+                                    "user":{
+                                        "id":"06520G",
+                                        "email":"ranjeet.xb.singh@barclayscorp.com"
+                                    },
+                                    "role":"ScrumMaster"
+                                },
+                                {
+                                    "user":{
+                                        "id":"07821P",
+                                        "email":"ayush.x.rastogi@barclays.com"
+                                    },
+                                    "role":"BuildLead"
+                                }
+                            ],
+                            "effortMetrics":{
+                                "spentHours":{
+                                    "requirements":data.spentHours_requirements,
+                                    "design":data.spentHours_design,
+                                    "build":data.spentHours_build,
+                                    "test":data.spentHours_test,
+                                    "support":data.spentHours_support,
+                                    "unproductive":data.spentHours_unproductive
+                                },
+                                "remainingHours":{
+                                	"requirements":data.remainingHours_requirements,
+                                    "design":data.remainingHours_design,
+                                    "build":data.remainingHours_build,
+                                    "test":data.remainingHours_test,
+                                    "support":data.remainingHours_support,
+                                    "unproductive":data.remainingHours_unproductive
+                                },
+                                "estimatedHours":{
+                                	"requirements":data.estimatedHours_requirements,
+                                    "design":data.estimatedHours_design,
+                                    "build":data.estimatedHours_build,
+                                    "test":data.estimatedHours_test,
+                                    "support":data.estimatedHours_support,
+                                    "unproductive":data.estimatedHours_unproductive
+                                }
+                            },
+                            "qualityMetrics":{
+                                "stats":{
+                                    "junit":data.qualityMetrics_stats_junit,
+                                    "sonarCritical":data.qualityMetrics_stats_sonarCritical,
+                                    "sonarMajor":data.qualityMetrics_stats_sonarMajor,
+                                    "DefectsSev1":data.qualityMetrics_stats_defectSev1,
+                                    "DefectsSev2":data.qualityMetrics_stats_defectSev2,
+                                    "DefectsSev3":data.qualityMetrics_stats_defectSev3,
+                                    "DefectsSev4":data.qualityMetrics_stats_defectSev4
+                                }
+                            },
+                            "productivityMetrics":{
+                                "stats":{
+                                    "storyPoints":data.productivityMetrics_stats_storypoints,
+                                    "velocity":data.productivityMetrics_stats_velocity
+                                }
+                            }
+                        }
+                    };
+                programService.saveProjectSnapshot(data, $rootScope.getToken()).then(function(createProjectSnapshotResp) {
+                    $scope.createProjectSnapshotResp = createProjectSnapshotResp;
+                    $state.go('app.profile');
+                    $scope.$parent.showHeader();
+                    $scope.$parent.clearFabs();
+                    $scope.isExpanded = false;
+                    $scope.$parent.setExpanded(false);
+                    $scope.$parent.setHeaderFab(false);
+                    $timeout(function() {
+                        ionicMaterialMotion.slideUp({
+                            selector: '.slide-up'
+                        });
+                    }, 300);
+                    $timeout(function() {
+                        ionicMaterialMotion.fadeSlideInRight({
+                            startVelocity: 3000
+                        });
+                    }, 700);
+                    ionicMaterialInk.displayEffect();
+                }, function(err) {
+                    $scope.errorObj = err.data.message;
+                    console.log("Failed!, something went wrong. " + err.data.message);
+                });
             }
         }
         if (data.length === undefined) {
             $ionicSlideBoxDelegate.stop();
             $event.preventDefault();
         }
-    }
+    };
     $scope.previousSlide = function() {
         $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
         $scope.currentSlide--;
         $ionicSlideBoxDelegate.previous();
-    }
+    };
+    $scope.getAllProjects = function(programId){
+    	programService.getAllProjects(programId, $rootScope.getToken()).then(function(projectResp) {
+            $scope.projectOptions = projectResp;
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+    };
 }).controller('GalleryCtrl', function($scope, $stateParams, $timeout, ionicMaterialInk, ionicMaterialMotion) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
