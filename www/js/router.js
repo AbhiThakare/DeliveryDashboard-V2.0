@@ -69,7 +69,7 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
                 controller: 'ProfileCtrl'
             },
             'fabContent': {
-                template: '<button id="fab-profile" class="button button-fab button-fab-bottom-right expanded button-energized-900 drop"><i class="icon ion-plus"></i></button>',
+                template: '',
                 controller: function($timeout) {
                     $timeout(function() {
                         document.getElementById('fab-profile').classList.toggle('on');

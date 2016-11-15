@@ -5,10 +5,10 @@
 	    </button>
   	</ion-nav-buttons>
 	<div class="nexPrevButtton">
-		<button ng-click="previousSlide(data)" id="fab-profile2" type="submit" class="button button-fab button-fab-top-left button-energized-900" nav-view="active">
+		<button ng-click="previousSlide(data)" id="fab-profile1" type="submit" class="button button-fab button-fab-top-left button-energized-900 drop" nav-view="active">
 			<i class="icon ion-chevron-left"></i>
 		</button> 
-		<button ng-click="nextSlide(data)" id="fab-profile" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900" nav-view="active">
+		<button ng-click="nextSlide(data)" id="fab-profile2" type="submit" ng-class="{'button-energized-900': currentSlide <= 6, 'button-balanced': currentSlide >= 7 }" class="button button-fab button-fab-top-right button-energized-900 drop" nav-view="active">
 			<i ng-show="currentSlide <= 6" class="icon ion-chevron-right"></i><span  ng-show="currentSlide >= 7"> Done  </span>
 		</button>
 	</div>

@@ -99,19 +99,7 @@ p {
     position: fixed;
     bottom: 0;
 }
-@media (min-width:1025px) { 
-	.scroll{
-		padding-left: 10% !important;
-		padding-right: 10% !important;
-	}
-	.slider-slide {
-		margin-top: 1%;
-	}
-	.nexPrevButtton {
-		margin-top: 5%;
-	    position: relative;
-	}
-}
+
 legend{
 	background-color: #f8f8f8 !important;
 	font-weight: 500;
@@ -125,13 +113,39 @@ legend{
 
 .figure{
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    margin: 5px auto;
     overflow: hidden;
     text-align: center;
-    line-height: 150px;
+    line-height: 80px;
     transform: rotate(-45deg);
     color:#fff;
+    margin: 0 auto;
+}
+
+@media (min-width:1025px) { 
+	.scroll{
+		padding-left: 10% !important;
+		padding-right: 10% !important;
+	}
+	.slider-slide {
+		margin-top: 1%;
+	}
+	.nexPrevButtton {
+		margin-top: 5%;
+	    position: relative;
+	}
+	.figure{
+	    position: relative;
+	    width: 150px;
+	    height: 150px;
+	    border-radius: 50%;
+	    overflow: hidden;
+	    text-align: center;
+	    line-height: 150px;
+	    transform: rotate(-45deg);
+	    color:#fff;
+	     margin: 0
+	}
 }

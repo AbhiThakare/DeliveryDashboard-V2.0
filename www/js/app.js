@@ -12,8 +12,8 @@ angular.module('dashboard', ['ionic', 'ionic-material', 'ionMdInput', 'chart.js'
     });
 }).run(function($rootScope, $state, $ionicPopup) {
     $rootScope.$on('$stateChangeStart', function(event, next, nextParams, fromState) {
-    	var authToken = window.localStorage.getItem('token');
-        if(authToken === "undefined" || authToken === null) {
+        var authToken = window.localStorage.getItem('token');
+        if (authToken === "undefined" || authToken === null) {
             if (next.name !== 'app.login') {
                 event.preventDefault();
                 $state.go('app.login');
