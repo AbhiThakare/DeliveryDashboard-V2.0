@@ -24,20 +24,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
         login: login,
     };
 }).service('graphService', function($q, $http, URL, $filter) {
-    var getCircleDataEstimatedEffort = function(authTokenForLogin) {
+    var getCircleDataEstimatedEffort = function(authTokenForLogin , refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/estimatedEffort/total?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/estimated/total',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -51,20 +49,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getCircleDataRemainingEffort = function(authTokenForLogin) {
+    var getCircleDataRemainingEffort = function(authTokenForLogin, refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/remainingEffort/total?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/remaining/total',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -78,20 +74,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getCircleDataSpentEffort = function(authTokenForLogin) {
+    var getCircleDataSpentEffort = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/spentEffort/total?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/spent/total',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params:  params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -105,20 +99,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getBurndown = function(authTokenForLogin) {
+    var getBurndown = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/effort/burndown?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/burndown',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -132,20 +124,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getSpentEffortHistogram = function(authTokenForLogin) {
+    var getSpentEffortHistogram = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/spentEffort/dateHistogram?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/spent/dateHistogram',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -159,20 +149,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getproductivityHistogramCanvas = function(authTokenForLogin) {
+    var getproductivityHistogramCanvas = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/productivity/dateHistogram?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/productivity/dateHistogram',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -186,20 +174,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getQualityHistogram = function(authTokenForLogin) {
+    var getQualityHistogram = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/quality/dateHistogram?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/quality/dateHistogram',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -213,20 +199,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getTeamHistogram = function(authTokenForLogin) {
+    var getTeamHistogram = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/team/dateHistogram?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/team/dateHistogram',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -241,20 +225,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
         });
     };
 
-    var getProjectProductivity = function(authTokenForLogin) {
+    var getProjectProductivity = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/productivity/stats?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/productivity/stats',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -268,20 +250,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getProjectQuality = function(authTokenForLogin) {
+    var getProjectQuality = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/quality/stats?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/quality/stats',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -295,20 +275,18 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getProjectSpentEfforts = function(authTokenForLogin) {
+    var getProjectSpentEfforts = function(authTokenForLogin ,refineData, userData, params) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/UKAEDF/spentEffort/stats?projectId=CI001',
+                url: URL.url + userData.account+'/'+refineData.selectProgram+'/effort/spent/stats',
                 method: 'GET',
-                params: {
-                    sprintId: 'CI0011'
-                },
+                params: params,
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json',
-                    'fromDate': '2016-01-01T00:00:00.000+0530',
-                    'toDate': $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                    'interval': '1w'
+                    'fromDate': $filter('date')(refineData.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'toDate': $filter('date')(refineData.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    'interval': refineData.interval+'w'
                 }
             }
             $http(req).then(function(data) {
@@ -338,10 +316,10 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
 
     };
 }).service('programService', function($q, $http, URL) {
-    var getAllProgram = function(authTokenForLogin) {
+    var getAllProgram = function(authTokenForLogin,userData) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/programs',
+                url: URL.url + userData.account+'/programs',
                 method: 'GET',
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
@@ -359,10 +337,10 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var getAllProjects = function(programId, authTokenForLogin) {
+    var getAllProjects = function(programId, authTokenForLogin, userData) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/' + programId + '/projects',
+                url: URL.url + userData.account+'/' + programId + '/projects',
                 method: 'GET',
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,

@@ -65,22 +65,27 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     };
     $scope.logout = function() {
         window.localStorage.removeItem('token');
+        window.localStorage.removeItem('refineData');
+        window.localStorage.removeItem('userData');
         $state.go('app.login');
     };
     $rootScope.saveToken = function(token) {
         window.localStorage.setItem('token', token);
+    };
+    $rootScope.saveuserData = function(userData){
+    	window.localStorage.setItem('userData', JSON.stringify(userData));
     };
     $rootScope.getToken = function(token) {
         var token = window.localStorage.getItem('token');
         return token;
     };
     $rootScope.getcolor = function(brightness) {
-        var rgb = [Math.random() * 255, Math.random() * 255, Math.random() * 255];
+        var rgb = [Math.random() * 90, Math.random() * 255, Math.random() * 255];
         var mix = [brightness * 51, brightness * 51, brightness * 51]; //51 => 255/5
         var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function(x) {
             return Math.round(x / 2.0)
         })
-        return "rgba(" + mixedrgb.join(",") + ",0.8)";
+        return "rgba(" + mixedrgb.join(",") + ",1)";
         //return "rgba("+(Math.floor(Math.random() * 255))+", "+(Math.floor(Math.random() * 255))+","+(Math.floor(Math.random() * 255))+",0.8)";
         //return '#' + Math.random().toString(16).substr(-6);
     }
@@ -89,76 +94,78 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         var data = [];
         var datasets = [];
         var option;
-        for (var j = 0; j < inputData[0].buckets.length; j++) {
-            for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
-                data[i] = [];
-            }
-        }
-        for (var j = 0; j < inputData[0].buckets.length; j++) {
-            if (inputData[0].buckets[j].key_as_string !== undefined) {
-                labels.push((inputData[0].buckets[j].key_as_string).substring(0, 10));
-            } else {
-                labels.push((inputData[0].buckets[j].key).substring(0, 10));
-            }
-            for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
-                data[i].push(inputData[0].buckets[j].aggregations[i].value);
-            }
-        }
-        if (chartType === 'bar') {
-            for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
-                datasets.push({
-                    'label': inputData[0].buckets[0].aggregations[j].name,
-                    'backgroundColor': $rootScope.getcolor(4),
-                    'borderColor': $rootScope.getcolor(1),
-                    'borderWidth': 0.6,
-                    'pointBackgroundColor': $rootScope.getcolor(4),
-                    'pointBorderColor': $rootScope.getcolor(1),
-                    'data': data[j]
-                });
-
-            }
-            option = {
-                animation: {
-                    duration: 5000
-                },
-                barThickness: 1,
-                scales: {
-                    xAxes: [{
-                        stacked: stacked,
-                        barPercentage: 0.6,
-                        categoryPercentage: 0.2
-                    }],
-                    yAxes: [{
-                        stacked: stacked
-                    }]
+        	if(inputData[0].buckets !== undefined){
+        	for (var j = 0; j < inputData[0].buckets.length; j++) {
+                for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
+                    data[i] = [];
                 }
-            };
+            }
+            for (var j = 0; j < inputData[0].buckets.length; j++) {
+                if (inputData[0].buckets[j].key_as_string !== undefined) {
+                    labels.push((inputData[0].buckets[j].key_as_string).substring(0, 10));
+                } else {
+                    labels.push((inputData[0].buckets[j].key).substring(0, 10));
+                }
+                for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
+                    data[i].push(inputData[0].buckets[j].aggregations[i].value);
+                }
+            }
+            if (chartType === 'bar') {
+                for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
+                    datasets.push({
+                        'label': inputData[0].buckets[0].aggregations[j].name,
+                        'backgroundColor': $rootScope.getcolor(2),
+                        'borderColor': $rootScope.getcolor(1),
+                        'borderWidth': 0.6,
+                        'pointBackgroundColor': $rootScope.getcolor(2),
+                        'pointBorderColor': $rootScope.getcolor(1),
+                        'data': data[j]
+                    });
+
+                }
+                option = {
+                    animation: {
+                        duration: 5000
+                    },
+                    barThickness: 1,
+                    scales: {
+                        xAxes: [{
+                            stacked: stacked,
+                            barPercentage: 0.6,
+                            categoryPercentage: 0.2
+                        }],
+                        yAxes: [{
+                            stacked: stacked
+                        }]
+                    }
+                };
         } else if (chartType === 'line') {
-            for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
-                datasets.push({
-                    'label': inputData[0].buckets[0].aggregations[j].name,
-                    'backgroundColor': $rootScope.getcolor(4),
-                    'borderColor': $rootScope.getcolor(1),
-                    'lineTension': 0.5,
-                    'borderWidth': 2,
-                    'fill': false,
-                    'pointBackgroundColor': $rootScope.getcolor(4),
-                    'pointBorderColor': $rootScope.getcolor(1),
-                    'data': data[j]
-                });
-
-            }
-            option = {
-                animation: {
-                    duration: 5000,
-                },
-                scales: {
-                    xAxes: [{
-                        display: true
-                    }]
-                }
-            }
+	            for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
+	                datasets.push({
+	                    'label': inputData[0].buckets[0].aggregations[j].name,
+	                    'backgroundColor': $rootScope.getcolor(2),
+	                    'borderColor': $rootScope.getcolor(1),
+	                    'lineTension': 0.5,
+	                    'borderWidth': 2,
+	                    'fill': false,
+	                    'pointBackgroundColor': $rootScope.getcolor(2 ),
+	                    'pointBorderColor': $rootScope.getcolor(1),
+	                    'data': data[j]
+	                });
+	
+	            }
+	            option = {
+	                animation: {
+	                    duration: 5000,
+	                },
+	                scales: {
+	                    xAxes: [{
+	                        display: true
+	                    }]
+	                }
+	            }
         }
+    }
         var outputData = {
             labels: labels,
             datasets: datasets,
@@ -185,6 +192,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         $scope.authTokenForLogin = btoa(data.username + ":" + data.password);
         loginService.login($scope.authTokenForLogin, data).then(function(loginResp) {
             $rootScope.saveToken($scope.authTokenForLogin);
+            $rootScope.saveuserData(loginResp);
             $scope.errorObj = false;
             $state.go('app.profile');
             $scope.$parent.showHeader();
@@ -223,7 +231,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     }, 300);
     ionicMaterialMotion.fadeSlideInRight();
     ionicMaterialInk.displayEffect();
-}).controller('ProfileCtrl', function($scope, $rootScope, $ionicModal, $state, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, graphService) {
+}).controller('ProfileCtrl', function($scope, $rootScope, $ionicModal, $state, $stateParams, $timeout, ionicMaterialMotion, ionicMaterialInk, graphService, programService) {
     $scope.$parent.showHeader();
     $scope.$parent.clearFabs();
     $scope.isExpanded = false;
@@ -241,130 +249,215 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     }).then(function(modal) {
         $scope.refineModal = modal;
     });
+    $scope.userData =  JSON.parse(window.localStorage.getItem('userData'));
     $scope.closeRefineModal = function() {
         $scope.refineModal.hide();
     }
+    $scope.destroyGraphs = function (){
+    	if($scope.myBarChart0 != undefined || $scope.myBarChart0 != null){
+            $scope.myBarChart0.destroy();
+    	}
+    	if($scope.myBarChart1 != undefined || $scope.myBarChart1 != null){
+            $scope.myBarChart1.destroy();
+    	}
+    	if($scope.myBarChart2 != undefined || $scope.myBarChart2 != null){
+            $scope.myBarChart2.destroy();
+    	}
+    	if($scope.myBarChart3 != undefined || $scope.myBarChart3 != null){
+            $scope.myBarChart3.destroy();
+    	}
+    	if($scope.myBarChart4 != undefined || $scope.myBarChart4 != null){
+            $scope.myBarChart4.destroy();
+    	}
+    	if($scope.myBarChart5 != undefined || $scope.myBarChart5 != null){
+            $scope.myBarChart5.destroy();
+    	}
+    	if($scope.myBarChart6 != undefined || $scope.myBarChart6 != null){
+            $scope.myBarChart6.destroy();
+    	}
+    	if($scope.myBarChart7 != undefined || $scope.myBarChart7 != null){
+            $scope.myBarChart7.destroy();
+    	}
+    };
+    $scope.drawCharts = function(){
+    	var params = [];
+    	$scope.params = {};
+        if (($scope.refineData.sprint!=undefined ||$scope.refineData.sprint!=null) && ($scope.refineData.selectProject!=undefined ||$scope.refineData.selectProject!=null)){
+        	params[0]  = { "sprintId": $scope.refineData.selectProject+$scope.refineData.sprint }
+        }
+        if (($scope.refineData.selectProject!=undefined || $scope.refineData.selectProject!=null) && ($scope.refineData.selectProject!='Select')){
+        	params[1] = { "projectId": $scope.refineData.selectProject}
+        }
+    	if(params[0]!=undefined && params[1]!=undefined){
+    		$scope.params['sprintid'] = params[0].sprintId;
+    		$scope.params['projectId'] = params[1].projectId;
+    	}else if(params[0]!=undefined && params[1]==undefined){
+    		$scope.params['sprintid'] = params[0].sprintId;
+    	}else if(params[1]!=undefined) {
+    		$scope.params['projectId'] = params[1].projectId;
+    	}
+    	$scope.destroyGraphs();
+    	graphService.getCircleDataEstimatedEffort($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(estimatedEffort) {
+            $scope.estimatedEffort = estimatedEffort;
+            $scope.color1 = $rootScope.getcolor(2);
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getCircleDataRemainingEffort($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(remainingEffort) {
+            $scope.remainingEffort = remainingEffort;
+            $scope.color2 = $rootScope.getcolor(2);
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getCircleDataSpentEffort($rootScope.getToken(), $scope.refineData, $scope.userData , $scope.params).then(function(spentEffort) {
+            $scope.spentEffort = spentEffort;
+            $scope.color3 = $rootScope.getcolor(2);
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getSpentEffortHistogram($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(SpentEffortResp) {
+            $scope.spentEffortData = $rootScope.getBarGraphData(SpentEffortResp, true, 'bar');
+            var bar = document.getElementById("spentEffortHistogramCanvas").getContext("2d");
+            $scope.myBarChart0 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.spentEffortData,
+                options: $scope.spentEffortData.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getBurndown($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(burnDownResp) {
+            $scope.burndownData = $rootScope.getBarGraphData(burnDownResp, true, 'line');
+            var bar = document.getElementById("burndownCanvas").getContext("2d");
+            $scope.myBarChart1 = new Chart(bar, {
+                type: 'line',
+                data: $scope.burndownData,
+                options: $scope.burndownData.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getproductivityHistogramCanvas($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(productivityResp) {
+            $scope.productivityResp = $rootScope.getBarGraphData(productivityResp, false, 'bar');
+            var bar = document.getElementById("productivityHistogramCanvas").getContext("2d");
+            $scope.myBarChart2 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.productivityResp,
+                options: $scope.productivityResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getQualityHistogram($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(qualityHistogramResp) {
+            $scope.qualityHistogramResp = $rootScope.getBarGraphData(qualityHistogramResp, true, 'bar');
+            var bar = document.getElementById("qualityHistogramCanvas").getContext("2d");
+            $scope.myBarChart3 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.qualityHistogramResp,
+                options: $scope.qualityHistogramResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getTeamHistogram($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(teamResp) {
+            $scope.teamResp = $rootScope.getBarGraphData(teamResp, true, 'bar');
+            var bar = document.getElementById("teamCanvas").getContext("2d");
+            $scope.myBarChart4 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.teamResp,
+                options: $scope.teamResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getProjectProductivity($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(projectProductivityStatResp) {
+            $scope.projectProductivityStatResp = $rootScope.getBarGraphData(projectProductivityStatResp, false, 'bar');
+            var bar = document.getElementById("projectProductivityStatCanvas").getContext("2d");
+            $scope.myBarChart5 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.projectProductivityStatResp,
+                options: $scope.projectProductivityStatResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getProjectQuality($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(projectQualityStatResp) {
+            $scope.projectQualityStatResp = $rootScope.getBarGraphData(projectQualityStatResp, false, 'bar');
+            var bar = document.getElementById("projectQualityStatCanvas").getContext("2d");
+            $scope.myBarChart6 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.projectQualityStatResp,
+                options: $scope.projectQualityStatResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+        graphService.getProjectSpentEfforts($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(projectSpentEffortsStatResp) {
+            $scope.projectSpentEffortsStatResp = $rootScope.getBarGraphData(projectSpentEffortsStatResp, false, 'bar');
+            var bar = document.getElementById("projectSpentEffortsStatCanvas").getContext("2d");
+            $scope.myBarChart7 = new Chart(bar, {
+                type: 'bar',
+                data: $scope.projectSpentEffortsStatResp,
+                options: $scope.projectSpentEffortsStatResp.option
+            });
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+    };
     $scope.refineShow = function(){
+    	var refinesaveData = window.localStorage.getItem('refineData');
+    	$scope.refineData.selectProgram = JSON.parse(refinesaveData).selectProgram;
+    	$scope.refineData.selectProject = JSON.parse(refinesaveData).selectProject;
+    	$scope.refineData.startDate = new Date(JSON.parse(refinesaveData).startDate);
+    	$scope.refineData.endDate = new Date(JSON.parse(refinesaveData).endDate);
+    	$scope.refineData.interval = JSON.parse(refinesaveData).interval;
+    	$scope.refineData.sprint = JSON.parse(refinesaveData).sprint;
     	$scope.refineModal.show();
     };
-    graphService.getCircleDataEstimatedEffort($rootScope.getToken()).then(function(estimatedEffort) {
-        $scope.estimatedEffort = estimatedEffort;
-        $scope.color1 = $rootScope.getcolor(2);
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getCircleDataRemainingEffort($rootScope.getToken()).then(function(remainingEffort) {
-        $scope.remainingEffort = remainingEffort;
-        $scope.color2 = $rootScope.getcolor(2);
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getCircleDataSpentEffort($rootScope.getToken()).then(function(spentEffort) {
-        $scope.spentEffort = spentEffort;
-        $scope.color3 = $rootScope.getcolor(2);
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getSpentEffortHistogram($rootScope.getToken()).then(function(SpentEffortResp) {
-        $scope.spentEffortData = $rootScope.getBarGraphData(SpentEffortResp, true, 'bar');
-        var bar = document.getElementById("spentEffortHistogramCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.spentEffortData,
-            options: $scope.spentEffortData.option
+    $scope.refreshCharts = function(refineData){
+    	window.localStorage.setItem('refineData', JSON.stringify(refineData));
+    	$scope.refineData = JSON.parse(window.localStorage.getItem('refineData'));
+    	$scope.closeRefineModal(); 
+    	$scope.drawCharts();
+    };
+    $scope.getAllProjects = function(programId) {
+        programService.getAllProjects(programId, $rootScope.getToken(), $scope.userData).then(function(projectResp) {
+            $scope.projectOptions = projectResp;
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
         });
+    };
+    programService.getAllProgram($rootScope.getToken(),$scope.userData).then(function(loginResp) {
+        $scope.programOption = loginResp;
     }, function(err) {
         $scope.errorObj = err.data.message;
         console.log("Failed!, something went wrong. " + err.data.message);
     });
-    graphService.getBurndown($rootScope.getToken()).then(function(burnDownResp) {
-        $scope.burndownData = $rootScope.getBarGraphData(burnDownResp, true, 'line');
-        var bar = document.getElementById("burndownCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'line',
-            data: $scope.burndownData,
-            options: $scope.burndownData.option
+    $scope.refinesaveData =  window.localStorage.getItem('refineData');
+    if($scope.refinesaveData === 'undefined' || $scope.refinesaveData === null){
+    	$ionicModal.fromTemplateUrl('templates/refineDashboard.html', {
+            scope: $scope,
+            animation: 'slide-in-up'
+        }).then(function(modal) {
+            $scope.refineModal = modal;
+            $scope.refineModal.show();
         });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getproductivityHistogramCanvas($rootScope.getToken()).then(function(productivityResp) {
-        $scope.productivityResp = $rootScope.getBarGraphData(productivityResp, false, 'bar');
-        var bar = document.getElementById("productivityHistogramCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.productivityResp,
-            options: $scope.productivityResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getQualityHistogram($rootScope.getToken()).then(function(qualityHistogramResp) {
-        $scope.qualityHistogramResp = $rootScope.getBarGraphData(qualityHistogramResp, true, 'bar');
-        var bar = document.getElementById("qualityHistogramCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.qualityHistogramResp,
-            options: $scope.qualityHistogramResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getTeamHistogram($rootScope.getToken()).then(function(teamResp) {
-        $scope.teamResp = $rootScope.getBarGraphData(teamResp, true, 'bar');
-        var bar = document.getElementById("teamCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.teamResp,
-            options: $scope.teamResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getProjectProductivity($rootScope.getToken()).then(function(projectProductivityStatResp) {
-        $scope.projectProductivityStatResp = $rootScope.getBarGraphData(projectProductivityStatResp, false, 'bar');
-        var bar = document.getElementById("projectProductivityStatCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.projectProductivityStatResp,
-            options: $scope.projectProductivityStatResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-    graphService.getProjectQuality($rootScope.getToken()).then(function(projectQualityStatResp) {
-        $scope.projectQualityStatResp = $rootScope.getBarGraphData(projectQualityStatResp, false, 'bar');
-        var bar = document.getElementById("projectQualityStatCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.projectQualityStatResp,
-            options: $scope.projectQualityStatResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
-
-    graphService.getProjectSpentEfforts($rootScope.getToken()).then(function(projectSpentEffortsStatResp) {
-        $scope.projectSpentEffortsStatResp = $rootScope.getBarGraphData(projectSpentEffortsStatResp, false, 'bar');
-        var bar = document.getElementById("projectSpentEffortsStatCanvas").getContext("2d");
-        var myBarChart = new Chart(bar, {
-            type: 'bar',
-            data: $scope.projectSpentEffortsStatResp,
-            options: $scope.projectSpentEffortsStatResp.option
-        });
-    }, function(err) {
-        $scope.errorObj = err.data.message;
-        console.log("Failed!, something went wrong. " + err.data.message);
-    });
+    }else{
+    	$scope.refineData = JSON.parse(window.localStorage.getItem('refineData'));
+    	$scope.drawCharts();
+    }
 }).controller('ActivityCtrl', function($scope, $state, $filter, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
 	 $scope.$parent.showHeader();
      $scope.isExpanded = false;
@@ -394,7 +487,9 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         }, 700);
         ionicMaterialInk.displayEffect();
     }
-    programService.getAllProgram($rootScope.getToken()).then(function(loginResp) {
+    $scope.refinesaveData =  window.localStorage.getItem('refineData');
+    $scope.userData =  JSON.parse(window.localStorage.getItem('userData'));
+    programService.getAllProgram($rootScope.getToken(), $scope.userData).then(function(loginResp) {
         $scope.programOption = loginResp;
     }, function(err) {
         $scope.errorObj = err.data.message;
@@ -599,7 +694,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         $ionicSlideBoxDelegate.previous();
     };
     $scope.getAllProjects = function(programId) {
-        programService.getAllProjects(programId, $rootScope.getToken()).then(function(projectResp) {
+        programService.getAllProjects(programId, $rootScope.getToken(),  $scope.userData).then(function(projectResp) {
             $scope.projectOptions = projectResp;
         }, function(err) {
             $scope.errorObj = err.data.message;

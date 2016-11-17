@@ -1,40 +1,39 @@
 <ion-view view-title="Dashboard" hide-back-button="true" hide-nav-bar="true">
     <ion-content ng-class="{expanded:$scope.isExpanded}">
-        <div class="row no-padding" ng-show="estimatedEffort && remainingEffort && spentEffort">
-            <div class=" col no-padding"> 
-	            <div class="item item-divider"> Estimated Effort : </div>
+        <div class="row no-padding">
+            <div class=" col no-padding" ng-show="estimatedEffort"> 
+	            <div class="item item-divider" > Estimated Effort : </div>
 	            	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color1}};">
 			   		{{estimatedEffort[0].value}}
 				</div>
             </div>
-            <div class="col no-padding"> 
-	            <div class="item item-divider"> Remaining Effort :</div>
+            <div class="col no-padding" ng-show="remainingEffort"> 
+	            <div class="item item-divider" > Remaining Effort :</div>
             	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color2}};">
 			   		{{remainingEffort[0].value}}
 				</div>
 			</div>
-			<div class="col no-padding"> 
-	            <div class="item item-divider"> Spent Effort :</div>
+			<div class="col no-padding" ng-show="spentEffort"> 
+	            <div class="item item-divider" > Spent Effort :</div>
             	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color3}};">
 			   		{{spentEffort[0].value}}
 					</div>
-            	</div>
+            </div>
 		</div>
-        <h4 class="content padding double-padding-x">Charts</h4>
-        <div class="card animate-fade-slide-in-right" ng-show="spentEffortData">
-            <div class="item item-divider">Spent Effort Histogram</div>
-            <div class="item item-text-wrap"> <canvas id="spentEffortHistogramCanvas"></canvas> </div>
-        </div>
-        <div class="card animate-fade-slide-in-right" ng-show="burndownData">
+		<div class="card animate-fade-slide-in-right" ng-show="burndownData">
             <div class="item item-divider">Burndown chart </div>
             <div class="item item-text-wrap"> <canvas id="burndownCanvas"></canvas> </div>
         </div>
+        <div class="card animate-fade-slide-in-right" ng-show="spentEffortData">
+            <div class="item item-divider">Spent Effort Date Histogram</div>
+            <div class="item item-text-wrap" id="spentEffortHistogram"> <canvas id="spentEffortHistogramCanvas"></canvas> </div>
+        </div>
         <div class="card animate-fade-slide-in-right" ng-show="productivityResp">
-            <div class="item item-divider">Productivity Histogram</div>
+            <div class="item item-divider">Productivity Date Histogram</div>
             <div class="item item-text-wrap"> <canvas id="productivityHistogramCanvas"></canvas> </div>
         </div>
         <div class="card animate-fade-slide-in-right" ng-show="qualityHistogramResp">
-            <div class="item item-divider">Quality Histogram</div>
+            <div class="item item-divider">Quality Date Histogram</div>
             <div class="item item-text-wrap"> <canvas id="qualityHistogramCanvas"></canvas> </div>
         </div>
         <div class="card animate-fade-slide-in-right" ng-show="teamResp">
@@ -49,10 +48,10 @@
             <div class="item item-divider">Product - wise Quality Chart</div>
             <div class="item item-text-wrap"> <canvas id="projectQualityStatCanvas"></canvas> </div>
         </div>
-        <div class="card animate-fade-slide-in-right" ng-show="getProjectSpentEfforts">
+        <div class="card animate-fade-slide-in-right" ng-show="projectSpentEffortsStatResp">
             <div class="item item-divider">Product - wise Spent effort Chart</div>
             <div class="item item-text-wrap"> <canvas id="projectSpentEffortsStatCanvas"></canvas> </div>
         </div>
     </ion-content>
-     <button id="fab-profile" class="button button-fab button-fab-bottom-right expanded button-energized-900 drop" ng-click="refineShow()"><i class="icon ion-edit"></i></button>
+    <button id="fab-profile" class="button button-fab button-fab-bottom-right expanded button-energized-900 drop" ng-click="refineShow()"><i class="icon ion-edit"></i></button>
 </ion-view>

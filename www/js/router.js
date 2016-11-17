@@ -62,6 +62,7 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
             }
         }
     }).state('app.profile', {
+    	cache: false,
         url: '/profile',
         views: {
             'menuContent': {
