@@ -3,21 +3,21 @@
         <div class="row no-padding">
             <div class=" col no-padding" ng-show="estimatedEffort"> 
 	            <div class="item item-divider" > Estimated Effort : </div>
-	            	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color1}};">
+	            	<div id="estimatedEffort" class="card figure animate-fade-slide-in-right button-energized-900 flip" >
 			   		{{estimatedEffort[0].value}}
 				</div>
             </div>
             <div class="col no-padding" ng-show="remainingEffort"> 
 	            <div class="item item-divider" > Remaining Effort :</div>
-            	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color2}};">
+            	<div id="remainingEffort" class="card figure animate-fade-slide-in-right button-assertive-900 flip">
 			   		{{remainingEffort[0].value}}
 				</div>
 			</div>
 			<div class="col no-padding" ng-show="spentEffort"> 
-	            <div class="item item-divider" > Spent Effort :</div>
-            	<div class="card figure animate-fade-slide-in-right" style="background-color:{{color3}};">
+	            <div class="item item-divider"> Spent Effort :</div>
+            	<div id="spentEffort"class="card figure animate-fade-slide-in-right  button-balanced-900 flip">
 			   		{{spentEffort[0].value}}
-					</div>
+				</div>
             </div>
 		</div>
 		<div class="card animate-fade-slide-in-right" ng-show="burndownData">

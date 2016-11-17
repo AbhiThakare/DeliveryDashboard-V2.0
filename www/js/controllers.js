@@ -74,6 +74,8 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     };
     $rootScope.saveuserData = function(userData){
     	window.localStorage.setItem('userData', JSON.stringify(userData));
+    	$scope.fname = userData.firstname;
+    	$scope.lname = userData.lastname;
     };
     $rootScope.getToken = function(token) {
         var token = window.localStorage.getItem('token');
@@ -242,6 +244,11 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             startVelocity: 3000
         });
     }, 700);
+    $timeout(function() {
+        document.getElementById('estimatedEffort').classList.toggle('on');
+        document.getElementById('remainingEffort').classList.toggle('on');
+        document.getElementById('spentEffort').classList.toggle('on');
+    }, 600);
     ionicMaterialInk.displayEffect();
     $ionicModal.fromTemplateUrl('templates/refineDashboard.html', {
         scope: $scope,
@@ -416,13 +423,14 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         });
     };
     $scope.refineShow = function(){
-    	var refinesaveData = window.localStorage.getItem('refineData');
-    	$scope.refineData.selectProgram = JSON.parse(refinesaveData).selectProgram;
-    	$scope.refineData.selectProject = JSON.parse(refinesaveData).selectProject;
-    	$scope.refineData.startDate = new Date(JSON.parse(refinesaveData).startDate);
-    	$scope.refineData.endDate = new Date(JSON.parse(refinesaveData).endDate);
-    	$scope.refineData.interval = JSON.parse(refinesaveData).interval;
-    	$scope.refineData.sprint = JSON.parse(refinesaveData).sprint;
+    	$scope.refineData = {};
+    	var refinesaveData = JSON.parse(window.localStorage.getItem('refineData'));
+    	$scope.refineData.selectProgram = (refinesaveData != null && refinesaveData.selectProgram!=null)?refinesaveData.selectProgram:undefined;
+    	$scope.refineData.selectProject = (refinesaveData != null && refinesaveData.selectProject!=null)?refinesaveData.selectProject:undefined;
+    	$scope.refineData.startDate = new Date((refinesaveData != null && refinesaveData.startDate!=null)?refinesaveData.startDate:'');
+    	$scope.refineData.endDate = new Date((refinesaveData != null && refinesaveData.endDate!=null)?refinesaveData.endDate:'');
+    	$scope.refineData.interval = (refinesaveData != null && refinesaveData.interval!=null)?refinesaveData.interval:undefined;
+    	$scope.refineData.sprint = (refinesaveData != null && refinesaveData.refinesaveData!=null)?refinesaveData.refinesaveData:undefined;
     	$scope.refineModal.show();
     };
     $scope.refreshCharts = function(refineData){

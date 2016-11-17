@@ -121,6 +121,7 @@ legend{
     transform: rotate(-45deg);
     color:#fff;
     margin: 0 auto;
+    font-size: 20px;
 }
 
 @media (min-width:1025px) { 
@@ -145,6 +146,7 @@ legend{
 	    line-height: 150px;
 	    transform: rotate(-45deg);
 	    color:#fff;
-	     margin: 0
+	    margin: 0;
+	    font-size: 25px;
 	}
 }
