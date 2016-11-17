@@ -82,12 +82,12 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         return token;
     };
     $rootScope.getcolor = function(brightness) {
-        var rgb = [Math.random() * 90, Math.random() * 255, Math.random() * 255];
+        var rgb = [Math.random() * 0, Math.random() * 255, Math.random() * 255];
         var mix = [brightness * 51, brightness * 51, brightness * 51]; //51 => 255/5
         var mixedrgb = [rgb[0] + mix[0], rgb[1] + mix[1], rgb[2] + mix[2]].map(function(x) {
             return Math.round(x / 2.0)
         })
-        return "rgba(" + mixedrgb.join(",") + ",1)";
+        return "rgba(" + mixedrgb.join(",") + ",0.9)";
         //return "rgba("+(Math.floor(Math.random() * 255))+", "+(Math.floor(Math.random() * 255))+","+(Math.floor(Math.random() * 255))+",0.8)";
         //return '#' + Math.random().toString(16).substr(-6);
     }
@@ -109,21 +109,24 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                     labels.push((inputData[0].buckets[j].key).substring(0, 10));
                 }
                 for (var i = 0; i < inputData[0].buckets[j].aggregations.length; i++) {
-                    data[i].push(inputData[0].buckets[j].aggregations[i].value);
+                	if(inputData[0].buckets[j].aggregations[i].name != 'YrsOfExperience' && inputData[0].buckets[j].aggregations[i].name != "TotalSpentEffort" && (inputData[0].buckets[j].aggregations[i].name !='SpentEffort' || chartType =='line')){
+                		data[i].push(inputData[0].buckets[j].aggregations[i].value);
+                	}
                 }
             }
             if (chartType === 'bar') {
                 for (var j = 0; j < inputData[0].buckets[0].aggregations.length; j++) {
-                    datasets.push({
-                        'label': inputData[0].buckets[0].aggregations[j].name,
-                        'backgroundColor': $rootScope.getcolor(2),
-                        'borderColor': $rootScope.getcolor(1),
-                        'borderWidth': 0.6,
-                        'pointBackgroundColor': $rootScope.getcolor(2),
-                        'pointBorderColor': $rootScope.getcolor(1),
-                        'data': data[j]
-                    });
-
+                	if(inputData[0].buckets[0].aggregations[j].name !='SpentEffort' && inputData[0].buckets[0].aggregations[j].name != 'YrsOfExperience' && inputData[0].buckets[0].aggregations[j].name != "TotalSpentEffort" ){
+	                	datasets.push({
+	                        'label': inputData[0].buckets[0].aggregations[j].name,
+	                        'backgroundColor': $rootScope.getcolor(3),
+	                        'borderColor': $rootScope.getcolor(1),
+	                        'borderWidth': 0.6,
+	                        'pointBackgroundColor': $rootScope.getcolor(3),
+	                        'pointBorderColor': $rootScope.getcolor(1),
+	                        'data': data[j]
+	                    });
+                	}
                 }
                 option = {
                     animation: {
@@ -296,10 +299,10 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         	params[1] = { "projectId": $scope.refineData.selectProject}
         }
     	if(params[0]!=undefined && params[1]!=undefined){
-    		$scope.params['sprintid'] = params[0].sprintId;
+    		$scope.params['sprintId'] = params[0].sprintId;
     		$scope.params['projectId'] = params[1].projectId;
     	}else if(params[0]!=undefined && params[1]==undefined){
-    		$scope.params['sprintid'] = params[0].sprintId;
+    		$scope.params['sprintId'] = params[0].sprintId;
     	}else if(params[1]!=undefined) {
     		$scope.params['projectId'] = params[1].projectId;
     	}
@@ -430,7 +433,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     	$scope.refineData.startDate = new Date((refinesaveData != null && refinesaveData.startDate!=null)?refinesaveData.startDate:'');
     	$scope.refineData.endDate = new Date((refinesaveData != null && refinesaveData.endDate!=null)?refinesaveData.endDate:'');
     	$scope.refineData.interval = (refinesaveData != null && refinesaveData.interval!=null)?refinesaveData.interval:undefined;
-    	$scope.refineData.sprint = (refinesaveData != null && refinesaveData.refinesaveData!=null)?refinesaveData.refinesaveData:undefined;
+    	$scope.refineData.sprint = (refinesaveData != null && refinesaveData.sprint!=null)?refinesaveData.sprint:undefined;
     	$scope.refineModal.show();
     };
     $scope.refreshCharts = function(refineData){
@@ -602,7 +605,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         "id": data.selectProject
                     },
                     "sprint": {
-                        "id": "CI0011",
+                        "id": data.selectProject+data.sprint,
                         "sprintNumber": data.sprint,
                         "status": (data.isSprintActive) ? sprintStatus = "ACTIVE" : sprintStatus = "INACTIVE",
                         "startDate": $filter('date')(data.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
