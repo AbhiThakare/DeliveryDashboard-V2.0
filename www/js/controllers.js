@@ -439,6 +439,9 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.refreshCharts = function(refineData){
     	window.localStorage.setItem('refineData', JSON.stringify(refineData));
     	$scope.refineData = JSON.parse(window.localStorage.getItem('refineData'));
+    	var projectName = ($scope.refineData.selectProject != 'Select' && $scope.refineData.selectProject != undefined && $scope.refineData.selectProject != null)?' -> '+$scope.refineData.selectProject:'';
+    	var sprintId = ($scope.refineData.sprint != null && $scope.refineData.sprint != undefined)?' -> '+$scope.refineData.sprint:'';
+    	$scope.titleName = $scope.refineData.selectProgram+projectName+sprintId +' DASHBOARD';
     	$scope.closeRefineModal(); 
     	$scope.drawCharts();
     };
@@ -469,6 +472,10 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     	$scope.refineData = JSON.parse(window.localStorage.getItem('refineData'));
     	$scope.drawCharts();
     }
+    var projectName = ($scope.refineData!= undefined && $scope.refineData.selectProject != 'Select' && $scope.refineData.selectProject != undefined && $scope.refineData.selectProject != null)?' -> '+$scope.refineData.selectProject:'';
+    var sprintId = ($scope.refineData!= undefined && $scope.refineData.sprint != null && $scope.refineData.sprint != undefined)?' -> '+$scope.refineData.sprint:'';
+    var programName = ($scope.refineData!= undefined && $scope.refineData.selectProgram != undefined)?$scope.refineData.selectProgram:'';
+    $scope.titleName = programName+projectName+sprintId +' DASHBOARD';
 }).controller('ActivityCtrl', function($scope, $state, $filter, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
 	 $scope.$parent.showHeader();
      $scope.isExpanded = false;
