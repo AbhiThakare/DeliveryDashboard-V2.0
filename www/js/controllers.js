@@ -476,7 +476,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     var sprintId = ($scope.refineData!= undefined && $scope.refineData.sprint != null && $scope.refineData.sprint != undefined)?' -> '+$scope.refineData.sprint:'';
     var programName = ($scope.refineData!= undefined && $scope.refineData.selectProgram != undefined)?$scope.refineData.selectProgram:'';
     $scope.titleName = programName+projectName+sprintId +' DASHBOARD';
-}).controller('ActivityCtrl', function($scope, $state, $filter, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR) {
+}).controller('ActivityCtrl', function($scope, $state, $filter, $rootScope, $stateParams, $ionicSlideBoxDelegate, $timeout, ionicMaterialMotion, ionicMaterialInk, programService, ERROR, userService) {
 	 $scope.$parent.showHeader();
      $scope.isExpanded = false;
      $scope.$parent.setExpanded(false);
@@ -486,6 +486,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
          document.getElementById('fab-profile2').classList.toggle('on');
      }, 600);
      ionicMaterialInk.displayEffect();
+     $scope.selection = [];
     $scope.goBack = function() {
         $state.go('app.profile');
         $scope.$parent.showHeader();
@@ -505,6 +506,22 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         }, 700);
         ionicMaterialInk.displayEffect();
     }
+    $scope.search = function(serachInput) {
+    	userService.search($rootScope.getToken(), serachInput).then(function(searchResp) {
+    		$scope.searchResult = searchResp
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+    };
+    $scope.toggleSelection = function toggleSelection(option) {
+        var idx = $scope.selection.indexOf(option);
+        if (idx > -1) {
+            $scope.selection.splice(idx, 1);
+        } else {
+            $scope.selection.push(option);
+        }
+    };
     $scope.refinesaveData =  window.localStorage.getItem('refineData');
     $scope.userData =  JSON.parse(window.localStorage.getItem('userData'));
     programService.getAllProgram($rootScope.getToken(), $scope.userData).then(function(loginResp) {
@@ -603,9 +620,18 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             } else {
                 $scope.slideError8 = false;
                 $scope.currentSlide++;
-                console.log(data);
                 $ionicSlideBoxDelegate.next();
                 var sprintStatus;
+                $scope.selecteduser = [];
+                for ( var i = 0; i < $scope.selection.length; i ++){
+                	$scope.selecteduser.push({
+                        "user": {
+                            "id": $scope.selection[i].id,
+                            "email": $scope.selection[i].email
+                        },
+                        "role": $scope.selection[i].roles
+                    })
+                }
                 data = {
                     "logDate": $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
                     "project": {

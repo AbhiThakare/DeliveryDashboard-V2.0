@@ -23,6 +23,34 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
     return {
         login: login,
     };
+}).service('userService', function($q, $http, URL) {
+    var search = function(authTokenForLogin, searchInput) {
+        return $q(function(resolve, reject) {
+            var req = {
+                url: URL.url + 'users/',
+                method: 'GET',
+                params: {
+                	fts:searchInput
+                },
+                headers: {
+                    'Authorization': 'Basic ' + authTokenForLogin,
+                    'Content-Type': 'application/json'
+                }
+            }
+            $http(req).then(function(data) {
+                if (data.status === 200) {
+                    resolve(data.data.response);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
+    return {
+    	search: search,
+    };
 }).service('graphService', function($q, $http, URL, $filter) {
     var getCircleDataEstimatedEffort = function(authTokenForLogin , refineData, userData, params) {
         return $q(function(resolve, reject) {
