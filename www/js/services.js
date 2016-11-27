@@ -48,8 +48,35 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
+    var changePass = function(authTokenForLogin, newPassData, userData) {
+        return $q(function(resolve, reject) {
+            var req = {
+                url: URL.url + 'user/profile',
+                method: 'PATCH',
+                headers: {
+                    'Authorization': 'Basic ' + authTokenForLogin,
+                    'Content-Type': 'application/json'
+                },
+                data: {
+                	"email":userData.email,
+            	    "password":newPassData.newPass,
+            	    "firstname": userData.firstname
+                }
+            }
+            $http(req).then(function(data) {
+                if (data.status === 200) {
+                    resolve(data.data.response);
+                } else {
+                    reject('Failed!');
+                }
+            }, function(err) {
+                reject(err);
+            });
+        });
+    };
     return {
     	search: search,
+    	changePass: changePass
     };
 }).service('graphService', function($q, $http, URL, $filter) {
     var getCircleDataEstimatedEffort = function(authTokenForLogin , refineData, userData, params) {
@@ -386,11 +413,11 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
             });
         });
     };
-    var saveProjectSnapshot = function(data, authTokenForLogin) {
+    var saveProjectSnapshot = function(selectProgram,data, authTokenForLogin, userData) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + 'BARCA/' + data.selectProgram + '/projects',
-                method: 'GET',
+                url: URL.url + userData.account+'/' + selectProgram + '/projectsnapshot',
+                method: 'POST',
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,
                     'Content-Type': 'application/json'

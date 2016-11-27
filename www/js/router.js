@@ -61,6 +61,23 @@ angular.module('dashboard').config(function($stateProvider, $urlRouterProvider, 
                 template: ''
             }
         }
+    }).state('app.userProfile', {
+    	cache: false,
+        url: '/userProfile',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/userProfile.html',
+                controller: 'UserProfileCtrl'
+            },
+            'fabContent': {
+                template: '',
+                controller: function($timeout) {
+                    $timeout(function() {
+                    	  document.getElementById('fab-friends').classList.toggle('on');
+                    }, 800);
+                }
+            }
+        }
     }).state('app.profile', {
     	cache: false,
         url: '/profile',

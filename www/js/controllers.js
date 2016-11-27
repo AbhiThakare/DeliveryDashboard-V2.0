@@ -69,6 +69,12 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         window.localStorage.removeItem('userData');
         $state.go('app.login');
     };
+    $rootScope.logout = function() {
+	    window.localStorage.removeItem('token');
+	    window.localStorage.removeItem('refineData');
+	    window.localStorage.removeItem('userData');
+	    $state.go('app.login');
+    }
     $rootScope.saveToken = function(token) {
         window.localStorage.setItem('token', token);
     };
@@ -80,6 +86,10 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $rootScope.getToken = function(token) {
         var token = window.localStorage.getItem('token');
         return token;
+    };
+    $rootScope.getUserData = function() {
+        var userData = window.localStorage.getItem('userData');
+        return userData;
     };
     $rootScope.getcolor = function(brightness) {
         var rgb = [Math.random() * 0, Math.random() * 255, Math.random() * 255];
@@ -178,21 +188,64 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
         };
         return outputData;
     };
-}).controller('LoginCtrl', function($scope, $ionicModal, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
+}).controller('UserProfileCtrl', function($scope, $ionicModal, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, userService) {
+	$scope.$parent.showHeader();
     $scope.$parent.clearFabs();
-    $scope.$parent.hideHeader();
-    $ionicModal.fromTemplateUrl('templates/signup.html', {
+    $scope.isExpanded = false;
+    $scope.$parent.setExpanded(false);
+    $scope.$parent.setHeaderFab(false);
+    $timeout(function() {
+        ionicMaterialMotion.fadeSlideInRight({
+            startVelocity: 3000
+        });
+    }, 700);
+    ionicMaterialMotion.fadeSlideInRight();
+    ionicMaterialInk.displayEffect();
+    $ionicModal.fromTemplateUrl('templates/changePassword.html', {
         scope: $scope,
         animation: 'slide-in-up'
     }).then(function(modal) {
-        $scope.signupModal = modal;
+        $scope.changePassModal = modal;
     });
-    $scope.signupShow = function() {
-        $scope.signupModal.show();
-    }
-    $scope.closeSignupModal = function() {
-        $scope.signupModal.hide();
-    }
+    $scope.showChangePassModal = function(){
+    	$scope.changePassModal.show();
+    };
+    $scope.closepasswordModal = function(){
+    	$scope.changePassModal.hide();
+    };
+    $scope.changePassword = function(changePassData){
+    	userService.changePass($rootScope.getToken(), changePassData, JSON.parse($rootScope.getUserData())).then(function(changePassResp) {
+    		$scope.changePassResp = changePassResp;
+    		$scope.closepasswordModal();
+    		$rootScope.logout();
+        }, function(err) {
+            $scope.errorObj = err.data.message;
+            console.log("Failed!, something went wrong. " + err.data.message);
+        });
+    };
+    $scope.goBack = function() {
+        $state.go('app.profile');
+        $scope.$parent.showHeader();
+        $scope.$parent.clearFabs();
+        $scope.isExpanded = false;
+        $scope.$parent.setExpanded(false);
+        $scope.$parent.setHeaderFab(false);
+        $timeout(function() {
+            ionicMaterialMotion.slideUp({
+                selector: '.slide-up'
+            });
+        }, 300);
+        $timeout(function() {
+            ionicMaterialMotion.fadeSlideInRight({
+                startVelocity: 3000
+            });
+        }, 700);
+        ionicMaterialInk.displayEffect();
+    };
+    $scope.userProfileData = JSON.parse($rootScope.getUserData());
+}).controller('LoginCtrl', function($scope, $ionicModal, $rootScope, $timeout, $state, $stateParams, ionicMaterialMotion, ionicMaterialInk, loginService) {
+    $scope.$parent.clearFabs();
+    $scope.$parent.hideHeader();
     $scope.login = function(data) {
         $scope.authTokenForLogin = btoa(data.username + ":" + data.password);
         loginService.login($scope.authTokenForLogin, data).then(function(loginResp) {
@@ -632,7 +685,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         "role": $scope.selection[i].roles
                     })
                 }
-                data = {
+                var projectData = {
                     "logDate": $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
                     "project": {
                         "id": data.selectProject
@@ -702,7 +755,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         }
                     }
                 };
-                programService.saveProjectSnapshot(data, $rootScope.getToken()).then(function(createProjectSnapshotResp) {
+                programService.saveProjectSnapshot(data.selectProgram, projectData, $rootScope.getToken(), JSON.parse($rootScope.getUserData())).then(function(createProjectSnapshotResp) {
                     $scope.createProjectSnapshotResp = createProjectSnapshotResp;
                     $state.go('app.profile');
                     $scope.$parent.showHeader();

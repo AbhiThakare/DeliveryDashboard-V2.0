@@ -1,0 +1,26 @@
+<ion-view style="" class=" " id="page6" title="User Profile" hide-back-button="true">
+   <ion-content class="has-header" padding="true">
+      <div class="hero animated bounceIn" style="background-image: url('img/profile-bg.jpg');">
+          <div class="content">
+              <div class="avatar" style="background-image: url('../www/img/user.png');"></div>
+              <h3><a class="light">{{userProfileData.firstname| uppercase}} {{userProfileData.lastname | uppercase}}</a></h3>
+          </div>
+      </div>
+      <ion-list class=" " id="profile-list4">
+         <ion-item style="" id="profile-list-item10" class="item-icon-left item-icon-right  ">
+            <i class="icon ion-iphone"></i>{{userProfileData.phone}}
+            <i class=""></i>
+         </ion-item>
+         <ion-item style="" id="profile-list-item11" class="item-icon-left  ">
+            <i class="icon ion-email"></i>{{userProfileData.email}}
+         </ion-item>
+         <ion-item style="" class="item-icon-left" id="profile-list-item13"><i class="icon ion-ribbon-a"></i>
+         	<span ng-repeat="tag in userProfileData.tags">{{tag.name}}, </span>
+         </ion-item>
+      </ion-list>
+      <div style="width: 283px; height: 31px;" class="spacer"></div>
+      <a>
+      	<button class="button button-assertive-900 button-block" id="searchUser-button15" ng-click="showChangePassModal()">CHANGE PASSWORD</button>
+      </a>
+   </ion-content>
+</ion-view>
