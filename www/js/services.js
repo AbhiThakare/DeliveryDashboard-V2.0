@@ -416,7 +416,7 @@ angular.module('dashboard').service('loginService', function($q, $http, URL) {
     var saveProjectSnapshot = function(selectProgram,data, authTokenForLogin, userData) {
         return $q(function(resolve, reject) {
             var req = {
-                url: URL.url + userData.account+'/' + selectProgram + '/projectsnapshot',
+                url: URL.url + userData.account+'/' + selectProgram + '/' + data.project.id + '/projectsnapshot',
                 method: 'POST',
                 headers: {
                     'Authorization': 'Basic ' + authTokenForLogin,

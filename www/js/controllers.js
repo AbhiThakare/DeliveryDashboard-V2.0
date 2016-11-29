@@ -418,7 +418,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             console.log("Failed!, something went wrong. " + err.data.message);
         });
         graphService.getQualityHistogram($rootScope.getToken(), $scope.refineData, $scope.userData, $scope.params).then(function(qualityHistogramResp) {
-            $scope.qualityHistogramResp = $rootScope.getBarGraphData(qualityHistogramResp, true, 'bar');
+            $scope.qualityHistogramResp = $rootScope.getBarGraphData(qualityHistogramResp, false, 'bar');
             var bar = document.getElementById("qualityHistogramCanvas").getContext("2d");
             $scope.myBarChart3 = new Chart(bar, {
                 type: 'bar',
@@ -567,11 +567,20 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             console.log("Failed!, something went wrong. " + err.data.message);
         });
     };
-    $scope.toggleSelection = function toggleSelection(option) {
+    $scope.toggleSelection = function toggleSelection(option, value, index, userRole) {
+    	option.userrole = (userRole == undefined)?'Developer':userRole
         var idx = $scope.selection.indexOf(option);
         if (idx > -1) {
             $scope.selection.splice(idx, 1);
-        } else {
+        } else if(value[index]) {
+            $scope.selection.push(option);
+        }
+    };
+    $scope.deleteUser = function toggleSelection(option) {
+        var idx = $scope.selection.indexOf(option);
+        if (idx > -1) {
+            $scope.selection.splice(idx, 1);
+        } else if(value) {
             $scope.selection.push(option);
         }
     };
@@ -610,7 +619,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                 $ionicSlideBoxDelegate.next();
             }
         } else if ($scope.currentSlide === 1) {
-            if (data.sprint === undefined || data.userStoryCount === undefined) {
+            if (data.sprint === undefined || data.userStoryCount === undefined || data.startDate === undefined || data.endDate === undefined) {
                 $scope.slideError2 = true;
                 $scope.slideError2Message = ERROR.errorMessage;
             } else if (data.sprint < 0 || data.userStoryCount < 0) {
@@ -622,7 +631,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                 $ionicSlideBoxDelegate.next();
             }
         } else if ($scope.currentSlide === 2) {
-            if (data.searchinput === undefined) {
+            if (data.searchinput === undefined || $scope.selection.length <= 0) {
                 $scope.slideError3 = true;
                 $scope.slideError3Message = ERROR.errorMessage;
             } else {
@@ -682,7 +691,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                             "id": $scope.selection[i].id,
                             "email": $scope.selection[i].email
                         },
-                        "role": $scope.selection[i].roles
+                        "role": $scope.selection[i].userrole
                     })
                 }
                 var projectData = {
@@ -697,19 +706,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         "startDate": $filter('date')(data.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
                         "endDate": $filter('date')(data.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
                         "userStoryCount": data.userStoryCount,
-                        "teamMembers": [{
-                            "user": {
-                                "id": "06520G",
-                                "email": "ranjeet.xb.singh@barclayscorp.com"
-                            },
-                            "role": "ScrumMaster"
-                        }, {
-                            "user": {
-                                "id": "07821P",
-                                "email": "ayush.x.rastogi@barclays.com"
-                            },
-                            "role": "BuildLead"
-                        }],
+                        "teamMembers": $scope.selecteduser,
                         "effortMetrics": {
                             "spentHours": {
                                 "requirements": data.spentHours_requirements,
