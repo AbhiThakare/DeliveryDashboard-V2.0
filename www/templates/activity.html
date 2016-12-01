@@ -69,6 +69,16 @@
 							</label> </div>
                     </div>
                     <div class="row responsive-sm">
+                        <div class="col col-30">
+                            <ion-toggle ng-model="data.isBackDate" ng-click="backDate(data.isBackDate)" name="isBackDate" class="item">Is Back Dated Entry?</ion-toggle>
+                        </div>
+                    </div>
+                    <div ng-show="isBackdate" class="row responsive-sm">
+                        <div class="col col-30"> <span class="input-label">Log Date<span class="assertive">*</span></span> <label class="item item-input">
+								<input type="date" placeholder="mm/dd/yyyy" required ng-model="data.backDate" name="backDate">
+							</label> </div>
+                    </div>
+                    <div class="row responsive-sm">
                         <div class="col col-0"> <span class="input-label">User Story Count <span class="assertive">*</span></span> <label class="item item-input">
 								<input type="number" placeholder="" required name="userStoryCount"  ng-model="data.userStoryCount" ng-keydown="($event.keyCode == 13 || $event.keyCode == 9) &&  nextSlide(data, $event)">
 							</label> </div>

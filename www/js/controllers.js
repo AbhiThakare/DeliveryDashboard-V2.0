@@ -607,6 +607,15 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
     $scope.disableSwipe = function() {
         $ionicSlideBoxDelegate.enableSlide(false);
     };
+    $scope.isBackdate = false;
+    $scope.backDate = function(isBackDate){
+    	if(isBackDate){
+    		$scope.isBackdate = true;
+    	}
+    	else {
+    		$scope.isBackdate = false;
+    	}
+    };
     $scope.nextSlide = function(data, $event) {
         $scope.currentSlide = $ionicSlideBoxDelegate.currentIndex();
         if ($scope.currentSlide === 0) {
@@ -625,7 +634,17 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
             } else if (data.sprint < 0 || data.userStoryCount < 0) {
                 $scope.slideError2 = true;
                 $scope.slideError2Message = ERROR.errorMessageValue;
-            } else {
+            } else if(data.isBackDate){
+            	if(data.backDate === undefined){
+            		$scope.slideError2 = true;
+                    $scope.slideError2Message = ERROR.errorMessage;
+            	}
+            	else{
+            		 $scope.slideError2 = false;
+                     $scope.currentSlide++;
+                     $ionicSlideBoxDelegate.next();
+            	}
+            }else {
                 $scope.slideError2 = false;
                 $scope.currentSlide++;
                 $ionicSlideBoxDelegate.next();
@@ -694,8 +713,9 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         "role": $scope.selection[i].userrole
                     })
                 }
+                var logDate = (data.backDate === undefined)?new Date():data.backDate;
                 var projectData = {
-                    "logDate": $filter('date')(new Date(), "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                    "logDate": $filter('date')(logDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
                     "project": {
                         "id": data.selectProject
                     },
