@@ -724,7 +724,7 @@ angular.module('dashboard').controller('AppCtrl', function($scope, $rootScope, $
                         "sprintNumber": data.sprint,
                         "status": (data.isSprintActive) ? sprintStatus = "ACTIVE" : sprintStatus = "INACTIVE",
                         "startDate": $filter('date')(data.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
-                        "endDate": $filter('date')(data.startDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
+                        "endDate": $filter('date')(data.endDate, "yyyy-MM-dd" + "T00:00:00.000+0530"),
                         "userStoryCount": data.userStoryCount,
                         "teamMembers": $scope.selecteduser,
                         "effortMetrics": {
